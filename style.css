@@ -124,6 +124,15 @@ html, body, #root {
   text-align: center;
 }
 
+.loading-screen {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  background: var(--bg);
+  font-size: 1rem;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════════
    GAME LAYOUT
    ══════════════════════════════════════════════════════════════════════════════ */
@@ -131,7 +140,7 @@ html, body, #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  max-width: 860px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 1rem 2rem;
 }
@@ -400,125 +409,70 @@ html, body, #root {
 /* ══════════════════════════════════════════════════════════════════════════════
    GLOBLE SPECIFIC
    ══════════════════════════════════════════════════════════════════════════════ */
-.globle-board {
-  display: grid;
-  grid-template-columns: minmax(240px, 340px) 1fr;
-  gap: 1rem;
-  align-items: stretch;
-}
-
-.globe-panel {
-  background: var(--bg-card);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  min-height: 280px;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
-
-.world-globe {
-  position: relative;
-  width: min(78vw, 280px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 34% 24%, rgba(255,255,255,.35), transparent 10%),
-    repeating-linear-gradient(0deg, transparent 0 20px, rgba(255,255,255,.13) 21px 22px),
-    repeating-linear-gradient(90deg, transparent 0 28px, rgba(255,255,255,.13) 29px 30px),
-    radial-gradient(circle at 50% 50%, rgba(74,168,197,.96) 0 54%, rgba(18,54,70,.95) 75%, rgba(7,15,22,1) 100%);
-  box-shadow:
-    inset -26px -18px 42px rgba(0,0,0,.48),
-    inset 18px 16px 34px rgba(255,255,255,.12),
-    0 18px 42px rgba(0,0,0,.36);
-}
-
-.world-globe::before,
-.world-globe::after {
-  content: "";
-  position: absolute;
-  inset: 12%;
-  border-radius: 46% 54% 48% 52%;
-  background: rgba(73,185,112,.52);
-  filter: blur(.2px);
-  clip-path: polygon(8% 24%, 32% 18%, 45% 31%, 36% 48%, 52% 61%, 39% 76%, 18% 66%, 21% 50%);
-}
-
-.world-globe::after {
-  inset: 19% 14% 18% 44%;
-  border-radius: 52% 48% 54% 46%;
-  background: rgba(212,184,91,.46);
-  clip-path: polygon(14% 10%, 78% 14%, 92% 39%, 70% 55%, 76% 82%, 42% 90%, 22% 64%, 4% 42%);
-}
-
-.globe-shadow {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background:
-    repeating-radial-gradient(circle at 50% 50%, transparent 0 27px, rgba(255,255,255,.14) 28px 29px),
-    repeating-linear-gradient(90deg, transparent 0 31px, rgba(255,255,255,.1) 32px 33px);
-  -webkit-mask-image: radial-gradient(circle, #000 0 70%, transparent 71%);
-  mask-image: radial-gradient(circle, #000 0 70%, transparent 71%);
-}
-
-.globe-marker {
-  position: absolute;
-  z-index: 2;
-  width: 24px;
-  height: 24px;
-  translate: -50% -50%;
-  display: grid;
-  place-items: center;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  color: #081512;
-  font-size: .72rem;
-  font-weight: 800;
-  box-shadow: 0 4px 14px rgba(0,0,0,.38);
-}
-
-.marker-exact,
-.marker-target { background: var(--success); }
-.marker-neighbor { background: var(--accent); }
-.marker-very-hot { background: var(--very-hot); color: #fff; }
-.marker-hot { background: var(--hot); color: #fff; }
-.marker-warm { background: var(--warm); }
-.marker-cold { background: var(--cold); }
-.marker-hidden-side {
-  opacity: .42;
-  scale: .82;
-}
-
-.globle-mystery-card {
-  background: var(--bg-card);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  text-align: center;
+.globle-play {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .4rem;
+  gap: .85rem;
 }
 
-.mystery-icon { font-size: 3rem; line-height: 1; }
-
-.mystery-label {
-  font-size: 1.15rem;
-  font-weight: 700;
+.globle-search {
+  width: min(100%, 620px);
+  z-index: 5;
 }
 
-.closest-hint {
-  color: var(--text-muted);
-  font-size: .9rem;
-}
-
-.globle-stats {
+.globle-summary {
   display: flex;
   gap: .5rem;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.globe-map {
+  width: 100%;
+  min-height: 430px;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 34%, rgba(43,179,163,.18), transparent 30%),
+    var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.globe-map canvas {
+  display: block;
+  cursor: grab;
+}
+
+.globe-map canvas:active {
+  cursor: grabbing;
+}
+
+.globe-tooltip {
+  color: var(--text);
+  background: rgba(16,17,19,.9);
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 6px;
+  padding: .35rem .55rem;
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.globle-actions {
+  text-align: center;
+  margin-top: -.25rem;
+}
+
+.btn-small {
+  font-size: .75rem;
+  padding: .25rem .75rem;
+}
+
+.globle-guess-list {
+  width: 100%;
 }
 
 .stat-pill {
@@ -557,8 +511,7 @@ html, body, #root {
    ══════════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 500px) {
   .home-title { font-size: 2.2rem; }
-  .globle-board { grid-template-columns: 1fr; }
-  .globe-panel { min-height: 260px; }
+  .globe-map { min-height: 420px; }
   .win-banner  { flex-direction: column; align-items: flex-start; }
   .lose-banner { flex-direction: column; align-items: flex-start; }
   .guess-item  { flex-wrap: wrap; }

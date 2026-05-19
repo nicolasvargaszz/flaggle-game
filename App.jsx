@@ -1,15 +1,35 @@
-import { useState } from "react";
-import FlagleGame from "./Flaglegame.jsx";
-import GlobleGame from "./Globegame.jsx";
+import { Suspense, lazy, useState } from "react";
 import "./style.css";
 
+const FlagleGame = lazy(() => import("./Flaglegame.jsx"));
+const GlobleGame = lazy(() => import("./Globegame.jsx"));
 const SCREENS = { HOME: "home", FLAGLE: "flagle", GLOBLE: "globle" };
 
 export default function App() {
   const [screen, setScreen] = useState(SCREENS.HOME);
-  if (screen === SCREENS.FLAGLE) return <FlagleGame onBack={() => setScreen(SCREENS.HOME)} />;
-  if (screen === SCREENS.GLOBLE) return <GlobleGame onBack={() => setScreen(SCREENS.HOME)} />;
+  if (screen === SCREENS.FLAGLE) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <FlagleGame onBack={() => setScreen(SCREENS.HOME)} />
+      </Suspense>
+    );
+  }
+  if (screen === SCREENS.GLOBLE) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <GlobleGame onBack={() => setScreen(SCREENS.HOME)} />
+      </Suspense>
+    );
+  }
   return <HomeScreen onSelect={setScreen} />;
+}
+
+function LoadingScreen() {
+  return (
+    <div className="loading-screen">
+      Cargando…
+    </div>
+  );
 }
 
 function HomeScreen({ onSelect }) {

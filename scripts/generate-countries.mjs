@@ -1,11 +1,22 @@
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { feature } from "topojson-client";
+import worldAtlas from "world-atlas/countries-110m.json" with { type: "json" };
 import worldCountries from "world-countries";
 
 const EXTRA_PLAYABLE_CODES = new Set([
   "PSE",
   "TWN",
 ]);
+
+const sourceByNumericCode = new Map(
+  worldCountries
+    .filter(entry => entry.ccn3)
+    .map(entry => [entry.ccn3, entry])
+);
+const atlasNumericCodes = new Set(
+  worldAtlas.objects.countries.geometries.map(geometry => String(geometry.id).padStart(3, "0"))
+);
 
 function unique(values) {
   return [...new Set(values.filter(Boolean))];
@@ -28,6 +39,7 @@ function toCountry(entry) {
     region: entry.region,
     subregion: entry.subregion ?? "",
     borders: entry.borders ?? [],
+    mapPolygon: atlasNumericCodes.has(entry.ccn3),
     aliases: unique([
       name,
       englishName,
@@ -67,4 +79,34 @@ export default countries;
 
 const outPath = fileURLToPath(new URL("../countries.generated.js", import.meta.url));
 writeFileSync(outPath, output);
-console.log(`Generated ${countries.length} countries.`);
+
+const geoJson = feature(worldAtlas, worldAtlas.objects.countries);
+
+geoJson.features = geoJson.features.map(countryFeature => {
+  const numericCode = String(countryFeature.id).padStart(3, "0");
+  const source = sourceByNumericCode.get(numericCode);
+  const isoA2 = source?.cca2 ?? "";
+  const isoA3 = source?.cca3 ?? "";
+  const spanishName = source?.translations?.spa?.common ?? countryFeature.properties.name;
+
+  return {
+    ...countryFeature,
+    properties: {
+      ...countryFeature.properties,
+      ISO_A2: isoA2,
+      ISO_A3: isoA3,
+      ADMIN: source?.name?.common ?? countryFeature.properties.name,
+      NAME_ES: spanishName,
+      NAME_EN: source?.name?.common ?? countryFeature.properties.name,
+    },
+  };
+});
+
+const publicDataDir = fileURLToPath(new URL("../public/data", import.meta.url));
+mkdirSync(publicDataDir, { recursive: true });
+writeFileSync(
+  `${publicDataDir}/countries.geojson`,
+  `${JSON.stringify(geoJson)}\n`
+);
+
+console.log(`Generated ${countries.length} countries and ${geoJson.features.length} map polygons.`);

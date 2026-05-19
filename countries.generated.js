@@ -18,6 +18,7 @@ const countries = [
       "TJK",
       "CHN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Afganistán",
       "Afghanistan",
@@ -46,6 +47,7 @@ const countries = [
       "MKD",
       "UNK"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Albania",
       "República de Albania",
@@ -80,6 +82,7 @@ const countries = [
       "POL",
       "CHE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Alemania",
       "Germany",
@@ -107,6 +110,7 @@ const countries = [
       "FRA",
       "ESP"
     ],
+    "mapPolygon": false,
     "aliases": [
       "Andorra",
       "Principado de Andorra",
@@ -134,6 +138,7 @@ const countries = [
       "ZMB",
       "NAM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Angola",
       "República de Angola",
@@ -157,6 +162,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Antigua y Barbuda",
       "Antigua and Barbuda",
@@ -186,6 +192,7 @@ const countries = [
       "ARE",
       "YEM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Arabia Saudí",
       "Saudi Arabia",
@@ -219,6 +226,7 @@ const countries = [
       "MLI",
       "MAR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Argelia",
       "Algeria",
@@ -250,6 +258,7 @@ const countries = [
       "PRY",
       "URY"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Argentina",
       "República Argentina",
@@ -276,6 +285,7 @@ const countries = [
       "IRN",
       "TUR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Armenia",
       "República de Armenia",
@@ -299,6 +309,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Australia and New Zealand",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Australia",
       "Mancomunidad de Australia",
@@ -329,6 +340,7 @@ const countries = [
       "SVN",
       "CHE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Austria",
       "República de Austria",
@@ -358,6 +370,7 @@ const countries = [
       "RUS",
       "TUR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Azerbaiyán",
       "Azerbaijan",
@@ -381,6 +394,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Bahamas",
       "Commonwealth de las Bahamas",
@@ -403,6 +417,7 @@ const countries = [
     "region": "Asia",
     "subregion": "Western Asia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Bahrein",
       "Bahrain",
@@ -430,6 +445,7 @@ const countries = [
       "MMR",
       "IND"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Bangladesh",
       "República Popular de Bangladesh",
@@ -453,6 +469,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Barbados",
       "BB",
@@ -478,6 +495,7 @@ const countries = [
       "LUX",
       "NLD"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Bélgica",
       "Belgium",
@@ -510,6 +528,7 @@ const countries = [
       "GTM",
       "MEX"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Belice",
       "Belize",
@@ -536,6 +555,7 @@ const countries = [
       "NGA",
       "TGO"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Benín",
       "Benin",
@@ -565,6 +585,7 @@ const countries = [
       "RUS",
       "UKR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Bielorrusia",
       "Belarus",
@@ -596,6 +617,7 @@ const countries = [
       "PRY",
       "PER"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Bolivia",
       "Estado Plurinacional de Bolivia",
@@ -627,6 +649,7 @@ const countries = [
       "MNE",
       "SRB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Bosnia y Herzegovina",
       "Bosnia and Herzegovina",
@@ -654,6 +677,7 @@ const countries = [
       "ZMB",
       "ZWE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Botswana",
       "República de Botswana",
@@ -688,6 +712,7 @@ const countries = [
       "URY",
       "VEN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Brasil",
       "Brazil",
@@ -713,6 +738,7 @@ const countries = [
     "borders": [
       "MYS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Brunei",
       "Nación de Brunei, Morada de la Paz",
@@ -744,6 +770,7 @@ const countries = [
       "SRB",
       "TUR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Bulgaria",
       "República de Bulgaria",
@@ -774,6 +801,7 @@ const countries = [
       "NER",
       "TGO"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Burkina Faso",
       "BF",
@@ -798,6 +826,7 @@ const countries = [
       "RWA",
       "TZA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Burundi",
       "República de Burundi",
@@ -824,6 +853,7 @@ const countries = [
       "CHN",
       "IND"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Bután",
       "Bhutan",
@@ -847,6 +877,7 @@ const countries = [
     "region": "Africa",
     "subregion": "Western Africa",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Cabo Verde",
       "Cape Verde",
@@ -873,6 +904,7 @@ const countries = [
       "THA",
       "VNM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Camboya",
       "Cambodia",
@@ -903,6 +935,7 @@ const countries = [
       "GAB",
       "NGA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Camerún",
       "Cameroon",
@@ -928,6 +961,7 @@ const countries = [
     "borders": [
       "USA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Canadá",
       "Canada",
@@ -950,6 +984,7 @@ const countries = [
     "borders": [
       "SAU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Catar",
       "Qatar",
@@ -980,6 +1015,7 @@ const countries = [
       "NGA",
       "SDN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Chad",
       "República de Chad",
@@ -1009,6 +1045,7 @@ const countries = [
       "POL",
       "SVK"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Chequia",
       "Czechia",
@@ -1037,6 +1074,7 @@ const countries = [
       "BOL",
       "PER"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Chile",
       "República de Chile",
@@ -1076,6 +1114,7 @@ const countries = [
       "TJK",
       "VNM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "China",
       "República Popular de China",
@@ -1102,6 +1141,7 @@ const countries = [
     "region": "Europe",
     "subregion": "Southern Europe",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Chipre",
       "Cyprus",
@@ -1130,6 +1170,7 @@ const countries = [
     "borders": [
       "ITA"
     ],
+    "mapPolygon": false,
     "aliases": [
       "Ciudad del Vaticano",
       "Vatican City",
@@ -1160,6 +1201,7 @@ const countries = [
       "PER",
       "VEN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Colombia",
       "República de Colombia",
@@ -1181,6 +1223,7 @@ const countries = [
     "region": "Africa",
     "subregion": "Eastern Africa",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Comoras",
       "Comoros",
@@ -1212,6 +1255,7 @@ const countries = [
       "COD",
       "GAB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Congo",
       "Republic of the Congo",
@@ -1245,6 +1289,7 @@ const countries = [
       "UGA",
       "ZMB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Congo (Rep. Dem.)",
       "DR Congo",
@@ -1275,6 +1320,7 @@ const countries = [
       "KOR",
       "RUS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Corea del Norte",
       "North Korea",
@@ -1305,6 +1351,7 @@ const countries = [
     "borders": [
       "PRK"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Corea del Sur",
       "South Korea",
@@ -1336,6 +1383,7 @@ const countries = [
       "LBR",
       "MLI"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Costa de Marfil",
       "Ivory Coast",
@@ -1364,6 +1412,7 @@ const countries = [
       "NIC",
       "PAN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Costa Rica",
       "República de Costa Rica",
@@ -1392,6 +1441,7 @@ const countries = [
       "SRB",
       "SVN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Croacia",
       "Croatia",
@@ -1417,6 +1467,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Cuba",
       "República de Cuba",
@@ -1440,6 +1491,7 @@ const countries = [
     "borders": [
       "DEU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Dinamarca",
       "Denmark",
@@ -1469,6 +1521,7 @@ const countries = [
       "ETH",
       "SOM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Djibouti",
       "República de Djibouti",
@@ -1495,6 +1548,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Dominica",
       "Mancomunidad de Dominica",
@@ -1521,6 +1575,7 @@ const countries = [
       "COL",
       "PER"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Ecuador",
       "República del Ecuador",
@@ -1547,6 +1602,7 @@ const countries = [
       "PSE",
       "SDN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Egipto",
       "Egypt",
@@ -1572,6 +1628,7 @@ const countries = [
       "GTM",
       "HND"
     ],
+    "mapPolygon": true,
     "aliases": [
       "El Salvador",
       "República de El Salvador",
@@ -1597,6 +1654,7 @@ const countries = [
       "OMN",
       "SAU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Emiratos Árabes Unidos",
       "United Arab Emirates",
@@ -1623,6 +1681,7 @@ const countries = [
       "ETH",
       "SDN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Eritrea",
       "Estado de Eritrea",
@@ -1654,6 +1713,7 @@ const countries = [
       "POL",
       "UKR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Eslovaquia",
       "Slovakia",
@@ -1682,6 +1742,7 @@ const countries = [
       "ITA",
       "HUN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Eslovenia",
       "Slovenia",
@@ -1712,6 +1773,7 @@ const countries = [
       "PRT",
       "MAR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "España",
       "Spain",
@@ -1737,6 +1799,7 @@ const countries = [
       "CAN",
       "MEX"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Estados Unidos",
       "United States",
@@ -1762,6 +1825,7 @@ const countries = [
       "LVA",
       "RUS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Estonia",
       "República de Estonia",
@@ -1792,6 +1856,7 @@ const countries = [
       "SSD",
       "SDN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Etiopía",
       "Ethiopia",
@@ -1816,6 +1881,7 @@ const countries = [
     "region": "Asia",
     "subregion": "South-Eastern Asia",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Filipinas",
       "Philippines",
@@ -1844,6 +1910,7 @@ const countries = [
       "SWE",
       "RUS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Finlandia",
       "Finland",
@@ -1869,6 +1936,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Melanesia",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Fiyi",
       "Fiji",
@@ -1904,6 +1972,7 @@ const countries = [
       "ESP",
       "CHE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Francia",
       "France",
@@ -1931,6 +2000,7 @@ const countries = [
       "COG",
       "GNQ"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Gabón",
       "Gabon",
@@ -1956,6 +2026,7 @@ const countries = [
     "borders": [
       "SEN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Gambia",
       "República de Gambia",
@@ -1983,6 +2054,7 @@ const countries = [
       "RUS",
       "TUR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Georgia",
       "GE",
@@ -2007,6 +2079,7 @@ const countries = [
       "CIV",
       "TGO"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Ghana",
       "República de Ghana",
@@ -2033,6 +2106,7 @@ const countries = [
       "TUR",
       "MKD"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Grecia",
       "Greece",
@@ -2058,6 +2132,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Grenada",
       "Granada",
@@ -2084,6 +2159,7 @@ const countries = [
       "HND",
       "MEX"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Guatemala",
       "República de Guatemala",
@@ -2113,6 +2189,7 @@ const countries = [
       "SEN",
       "SLE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Guinea",
       "República de Guinea",
@@ -2139,6 +2216,7 @@ const countries = [
       "CMR",
       "GAB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Guinea Ecuatorial",
       "Equatorial Guinea",
@@ -2167,6 +2245,7 @@ const countries = [
       "GIN",
       "SEN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Guinea-Bisáu",
       "Guinea-Bissau",
@@ -2195,6 +2274,7 @@ const countries = [
       "SUR",
       "VEN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Guyana",
       "República Cooperativa de Guyana",
@@ -2218,6 +2298,7 @@ const countries = [
     "borders": [
       "DOM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Haití",
       "Haiti",
@@ -2247,6 +2328,7 @@ const countries = [
       "SLV",
       "NIC"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Honduras",
       "República de Honduras",
@@ -2277,6 +2359,7 @@ const countries = [
       "SVN",
       "UKR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Hungría",
       "Hungary",
@@ -2304,6 +2387,7 @@ const countries = [
       "NPL",
       "PAK"
     ],
+    "mapPolygon": true,
     "aliases": [
       "India",
       "República de la India",
@@ -2332,6 +2416,7 @@ const countries = [
       "MYS",
       "PNG"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Indonesia",
       "República de Indonesia",
@@ -2362,6 +2447,7 @@ const countries = [
       "SYR",
       "TUR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Irak",
       "Iraq",
@@ -2393,6 +2479,7 @@ const countries = [
       "TUR",
       "TKM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Iran",
       "República Islámica de Irán",
@@ -2419,6 +2506,7 @@ const countries = [
     "borders": [
       "GBR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Irlanda",
       "Ireland",
@@ -2443,6 +2531,7 @@ const countries = [
     "region": "Europe",
     "subregion": "Northern Europe",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Islandia",
       "Iceland",
@@ -2466,6 +2555,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Micronesia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Islas Marshall",
       "Marshall Islands",
@@ -2489,6 +2579,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Melanesia",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Islas Salomón",
       "Solomon Islands",
@@ -2517,6 +2608,7 @@ const countries = [
       "PSE",
       "SYR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Israel",
       "Estado de Israel",
@@ -2546,6 +2638,7 @@ const countries = [
       "CHE",
       "VAT"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Italia",
       "Italy",
@@ -2569,6 +2662,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Jamaica",
       "JM",
@@ -2588,6 +2682,7 @@ const countries = [
     "region": "Asia",
     "subregion": "Eastern Asia",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Japón",
       "Japan",
@@ -2616,6 +2711,7 @@ const countries = [
       "SAU",
       "SYR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Jordania",
       "Jordan",
@@ -2645,6 +2741,7 @@ const countries = [
       "TKM",
       "UZB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Kazajistán",
       "Kazakhstan",
@@ -2679,6 +2776,7 @@ const countries = [
       "TZA",
       "UGA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Kenia",
       "Kenya",
@@ -2707,6 +2805,7 @@ const countries = [
       "TJK",
       "UZB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Kirguizistán",
       "Kyrgyzstan",
@@ -2732,6 +2831,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Micronesia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Kiribati",
       "República Independiente y Soberano de Kiribati",
@@ -2758,6 +2858,7 @@ const countries = [
       "IRQ",
       "SAU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Kuwait",
       "Estado de Kuwait",
@@ -2787,6 +2888,7 @@ const countries = [
       "THA",
       "VNM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Laos",
       "República Democrática Popular Lao",
@@ -2812,6 +2914,7 @@ const countries = [
     "borders": [
       "ZAF"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Lesotho",
       "Reino de Lesotho",
@@ -2840,6 +2943,7 @@ const countries = [
       "LTU",
       "RUS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Letonia",
       "Latvia",
@@ -2867,6 +2971,7 @@ const countries = [
       "ISR",
       "SYR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Líbano",
       "Lebanon",
@@ -2894,6 +2999,7 @@ const countries = [
       "CIV",
       "SLE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Liberia",
       "República de Liberia",
@@ -2922,6 +3028,7 @@ const countries = [
       "SDN",
       "TUN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Libia",
       "Libya",
@@ -2949,6 +3056,7 @@ const countries = [
       "AUT",
       "CHE"
     ],
+    "mapPolygon": false,
     "aliases": [
       "Liechtenstein",
       "Principado de Liechtenstein",
@@ -2976,6 +3084,7 @@ const countries = [
       "POL",
       "RUS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Lituania",
       "Lithuania",
@@ -3003,6 +3112,7 @@ const countries = [
       "FRA",
       "DEU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Luxemburgo",
       "Luxembourg",
@@ -3034,6 +3144,7 @@ const countries = [
       "UNK",
       "SRB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Macedonia del Norte",
       "North Macedonia",
@@ -3060,6 +3171,7 @@ const countries = [
     "region": "Africa",
     "subregion": "Eastern Africa",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Madagascar",
       "República de Madagascar",
@@ -3088,6 +3200,7 @@ const countries = [
       "IDN",
       "THA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Malasia",
       "Malaysia",
@@ -3113,6 +3226,7 @@ const countries = [
       "TZA",
       "ZMB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Malawi",
       "República de Malawi",
@@ -3135,6 +3249,7 @@ const countries = [
     "region": "Asia",
     "subregion": "Southern Asia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Maldivas",
       "Maldives",
@@ -3167,6 +3282,7 @@ const countries = [
       "NER",
       "SEN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Mali",
       "República de Malí",
@@ -3189,6 +3305,7 @@ const countries = [
     "region": "Europe",
     "subregion": "Southern Europe",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Malta",
       "República de Malta",
@@ -3215,6 +3332,7 @@ const countries = [
       "ESH",
       "ESP"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Marruecos",
       "Morocco",
@@ -3238,6 +3356,7 @@ const countries = [
     "region": "Africa",
     "subregion": "Eastern Africa",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Mauricio",
       "Mauritius",
@@ -3267,6 +3386,7 @@ const countries = [
       "SEN",
       "ESH"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Mauritania",
       "República Islámica de Mauritania",
@@ -3294,6 +3414,7 @@ const countries = [
       "GTM",
       "USA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "México",
       "Mexico",
@@ -3317,6 +3438,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Micronesia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Micronesia",
       "Estados Federados de Micronesia",
@@ -3342,6 +3464,7 @@ const countries = [
       "ROU",
       "UKR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Moldavia",
       "Moldova",
@@ -3368,6 +3491,7 @@ const countries = [
     "borders": [
       "FRA"
     ],
+    "mapPolygon": false,
     "aliases": [
       "Mónaco",
       "Monaco",
@@ -3395,6 +3519,7 @@ const countries = [
       "CHN",
       "RUS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Mongolia",
       "MN",
@@ -3421,6 +3546,7 @@ const countries = [
       "UNK",
       "SRB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Montenegro",
       "ME",
@@ -3448,6 +3574,7 @@ const countries = [
       "ZMB",
       "ZWE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Mozambique",
       "República de Mozambique",
@@ -3476,6 +3603,7 @@ const countries = [
       "LAO",
       "THA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Myanmar",
       "República de la Unión de Myanmar",
@@ -3505,6 +3633,7 @@ const countries = [
       "ZAF",
       "ZMB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Namibia",
       "República de Namibia",
@@ -3527,6 +3656,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Micronesia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Nauru",
       "República de Nauru",
@@ -3554,6 +3684,7 @@ const countries = [
       "CHN",
       "IND"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Nepal",
       "República Democrática Federal de Nepal",
@@ -3580,6 +3711,7 @@ const countries = [
       "CRI",
       "HND"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Nicaragua",
       "República de Nicaragua",
@@ -3610,6 +3742,7 @@ const countries = [
       "MLI",
       "NGA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Níger",
       "Niger",
@@ -3639,6 +3772,7 @@ const countries = [
       "TCD",
       "NER"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Nigeria",
       "República Federal de Nigeria",
@@ -3667,6 +3801,7 @@ const countries = [
       "SWE",
       "RUS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Noruega",
       "Norway",
@@ -3693,6 +3828,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Australia and New Zealand",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Nueva Zelanda",
       "New Zealand",
@@ -3719,6 +3855,7 @@ const countries = [
       "ARE",
       "YEM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Omán",
       "Oman",
@@ -3746,6 +3883,7 @@ const countries = [
       "BEL",
       "DEU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Países Bajos",
       "Netherlands",
@@ -3776,6 +3914,7 @@ const countries = [
       "IND",
       "IRN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Pakistán",
       "Pakistan",
@@ -3800,6 +3939,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Micronesia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Palau",
       "República de Palau",
@@ -3826,6 +3966,7 @@ const countries = [
       "EGY",
       "JOR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Palestina",
       "Palestine",
@@ -3854,6 +3995,7 @@ const countries = [
       "COL",
       "CRI"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Panamá",
       "Panama",
@@ -3878,6 +4020,7 @@ const countries = [
     "borders": [
       "IDN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Papúa Nueva Guinea",
       "Papua New Guinea",
@@ -3905,6 +4048,7 @@ const countries = [
       "BOL",
       "BRA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Paraguay",
       "República de Paraguay",
@@ -3935,6 +4079,7 @@ const countries = [
       "COL",
       "ECU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Perú",
       "Peru",
@@ -3966,6 +4111,7 @@ const countries = [
       "SVK",
       "UKR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Polonia",
       "Poland",
@@ -3991,6 +4137,7 @@ const countries = [
     "borders": [
       "ESP"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Portugal",
       "República Portuguesa",
@@ -4016,6 +4163,7 @@ const countries = [
     "borders": [
       "IRL"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Reino Unido",
       "United Kingdom",
@@ -4047,6 +4195,7 @@ const countries = [
       "SSD",
       "SDN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "República Centroafricana",
       "Central African Republic",
@@ -4070,6 +4219,7 @@ const countries = [
     "borders": [
       "HTI"
     ],
+    "mapPolygon": true,
     "aliases": [
       "República Dominicana",
       "Dominican Republic",
@@ -4095,6 +4245,7 @@ const countries = [
       "TZA",
       "UGA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Ruanda",
       "Rwanda",
@@ -4125,6 +4276,7 @@ const countries = [
       "SRB",
       "UKR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Rumania",
       "Romania",
@@ -4162,6 +4314,7 @@ const countries = [
       "POL",
       "UKR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Rusia",
       "Russia",
@@ -4185,6 +4338,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Polynesia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Samoa",
       "Estado Independiente de Samoa",
@@ -4208,6 +4362,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "San Cristóbal y Nieves",
       "Saint Kitts and Nevis",
@@ -4233,6 +4388,7 @@ const countries = [
     "borders": [
       "ITA"
     ],
+    "mapPolygon": false,
     "aliases": [
       "San Marino",
       "Serenísima República de San Marino",
@@ -4256,6 +4412,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "San Vicente y Granadinas",
       "Saint Vincent and the Grenadines",
@@ -4278,6 +4435,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Santa Lucía",
       "Saint Lucia",
@@ -4298,6 +4456,7 @@ const countries = [
     "region": "Africa",
     "subregion": "Middle Africa",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Santo Tomé y Príncipe",
       "São Tomé and Príncipe",
@@ -4328,6 +4487,7 @@ const countries = [
       "MLI",
       "MRT"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Senegal",
       "República de Senegal",
@@ -4359,6 +4519,7 @@ const countries = [
       "MNE",
       "ROU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Serbia",
       "República de Serbia",
@@ -4384,6 +4545,7 @@ const countries = [
     "region": "Africa",
     "subregion": "Eastern Africa",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Seychelles",
       "República de las Seychelles",
@@ -4411,6 +4573,7 @@ const countries = [
       "GIN",
       "LBR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Sierra Leone",
       "República de Sierra Leona",
@@ -4432,6 +4595,7 @@ const countries = [
     "region": "Asia",
     "subregion": "South-Eastern Asia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Singapur",
       "Singapore",
@@ -4463,6 +4627,7 @@ const countries = [
       "LBN",
       "TUR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Siria",
       "Syria",
@@ -4490,6 +4655,7 @@ const countries = [
       "ETH",
       "KEN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Somalia",
       "República Federal de Somalia",
@@ -4516,6 +4682,7 @@ const countries = [
     "borders": [
       "IND"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Sri Lanka",
       "República Democrática Socialista de Sri Lanka",
@@ -4542,6 +4709,7 @@ const countries = [
       "MOZ",
       "ZAF"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Suazilandia",
       "Eswatini",
@@ -4576,6 +4744,7 @@ const countries = [
       "SWZ",
       "ZWE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Sudáfrica",
       "South Africa",
@@ -4608,6 +4777,7 @@ const countries = [
       "LBY",
       "SSD"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Sudán",
       "Sudan",
@@ -4639,6 +4809,7 @@ const countries = [
       "SDN",
       "UGA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Sudán del Sur",
       "South Sudan",
@@ -4664,6 +4835,7 @@ const countries = [
       "FIN",
       "NOR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Suecia",
       "Sweden",
@@ -4693,6 +4865,7 @@ const countries = [
       "LIE",
       "DEU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Suiza",
       "Switzerland",
@@ -4724,6 +4897,7 @@ const countries = [
       "GUF",
       "GUY"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Surinam",
       "Suriname",
@@ -4754,6 +4928,7 @@ const countries = [
       "LAO",
       "MYS"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Tailandia",
       "Thailand",
@@ -4780,6 +4955,7 @@ const countries = [
     "region": "Asia",
     "subregion": "Eastern Asia",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Taiwán",
       "Taiwan",
@@ -4817,6 +4993,7 @@ const countries = [
       "UGA",
       "ZMB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Tanzania",
       "República Unida de Tanzania",
@@ -4846,6 +5023,7 @@ const countries = [
       "KGZ",
       "UZB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Tayikistán",
       "Tajikistan",
@@ -4873,6 +5051,7 @@ const countries = [
     "borders": [
       "IDN"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Timor Oriental",
       "Timor-Leste",
@@ -4904,6 +5083,7 @@ const countries = [
       "BFA",
       "GHA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Togo",
       "República de Togo",
@@ -4928,6 +5108,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Polynesia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Tonga",
       "Reino de Tonga",
@@ -4950,6 +5131,7 @@ const countries = [
     "region": "Americas",
     "subregion": "Caribbean",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Trinidad y Tobago",
       "Trinidad and Tobago",
@@ -4975,6 +5157,7 @@ const countries = [
       "DZA",
       "LBY"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Túnez",
       "Tunisia",
@@ -5004,6 +5187,7 @@ const countries = [
       "KAZ",
       "UZB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Turkmenistán",
       "Turkmenistan",
@@ -5033,6 +5217,7 @@ const countries = [
       "IRQ",
       "SYR"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Turquía",
       "Türkiye",
@@ -5058,6 +5243,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Polynesia",
     "borders": [],
+    "mapPolygon": false,
     "aliases": [
       "Tuvalu",
       "TV",
@@ -5085,6 +5271,7 @@ const countries = [
       "RUS",
       "SVK"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Ucrania",
       "Ukraine",
@@ -5112,6 +5299,7 @@ const countries = [
       "SSD",
       "TZA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Uganda",
       "República de Uganda",
@@ -5137,6 +5325,7 @@ const countries = [
       "ARG",
       "BRA"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Uruguay",
       "República Oriental del Uruguay",
@@ -5165,6 +5354,7 @@ const countries = [
       "TJK",
       "TKM"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Uzbekistán",
       "Uzbekistan",
@@ -5189,6 +5379,7 @@ const countries = [
     "region": "Oceania",
     "subregion": "Melanesia",
     "borders": [],
+    "mapPolygon": true,
     "aliases": [
       "Vanuatu",
       "República de Vanuatu",
@@ -5217,6 +5408,7 @@ const countries = [
       "COL",
       "GUY"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Venezuela",
       "República Bolivariana de Venezuela",
@@ -5243,6 +5435,7 @@ const countries = [
       "CHN",
       "LAO"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Vietnam",
       "República Socialista de Vietnam",
@@ -5270,6 +5463,7 @@ const countries = [
       "OMN",
       "SAU"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Yemen",
       "República de Yemen",
@@ -5302,6 +5496,7 @@ const countries = [
       "TZA",
       "ZWE"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Zambia",
       "República de Zambia",
@@ -5329,6 +5524,7 @@ const countries = [
       "ZAF",
       "ZMB"
     ],
+    "mapPolygon": true,
     "aliases": [
       "Zimbabue",
       "Zimbabwe",
