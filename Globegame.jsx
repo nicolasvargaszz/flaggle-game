@@ -4,18 +4,41 @@
  * You can guess from the text input or by clicking a country on the 3D globe.
  */
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GlobeMap from "./GlobeMap.jsx";
 import countries from "./countries.js";
 import { haversineDistance, getProximityHint } from "./distances.js";
 import CountryInput from "./countryinput.jsx";
 import GameLayout from "./gamelayout.jsx";
 
-const MAX_GUESSES = 8;
+const GAME_MODES = {
+  PRACTICE: "practice",
+  DAILY: "daily",
+};
 const globeTargetCountries = countries.filter(country => country.mapPolygon);
 
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function getDailyKey(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function hashString(value) {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function getDailyCountry(dateKey) {
+  return globeTargetCountries[hashString(dateKey) % globeTargetCountries.length];
 }
 
 function isAdjacent(country, target) {
@@ -42,23 +65,40 @@ function buildGuess(country, target) {
 }
 
 export default function GlobleGame({ onBack }) {
-  const [target, setTarget] = useState(() => pickRandom(globeTargetCountries));
+  const [mode, setMode] = useState(GAME_MODES.PRACTICE);
+  const [dailyKey, setDailyKey] = useState(() => getDailyKey());
+  const [practiceTarget, setPracticeTarget] = useState(() => pickRandom(globeTargetCountries));
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [guesses, setGuesses] = useState([]);
   const [gameWon, setGameWon] = useState(false);
-  const [gameLost, setGameLost] = useState(false);
   const [alreadyGuessed, setAlreadyGuessed] = useState(null);
+  const [showCountryLabels, setShowCountryLabels] = useState(true);
 
+  const dailyTarget = useMemo(() => getDailyCountry(dailyKey), [dailyKey]);
+  const target = mode === GAME_MODES.DAILY ? dailyTarget : practiceTarget;
   const guessedCodes = useMemo(
     () => new Set(guesses.map(guess => guess.country.code3)),
     [guesses]
   );
-  const gameOver = gameWon || gameLost;
   const sortedByDistance = [...guesses].sort((a, b) => a.distanceKm - b.distanceKm);
   const closest = sortedByDistance[0];
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const currentKey = getDailyKey();
+      setDailyKey(prevKey => (prevKey === currentKey ? prevKey : currentKey));
+    }, 60 * 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (mode !== GAME_MODES.DAILY) return;
+    resetRound();
+  }, [dailyKey, mode]);
+
   function handleGuess(country) {
-    if (gameOver) return;
+    if (gameWon) return;
 
     setSelectedCountry(country);
 
@@ -70,50 +110,87 @@ export default function GlobleGame({ onBack }) {
 
     setAlreadyGuessed(null);
     const guess = buildGuess(country, target);
-    const nextGuessCount = guesses.length + 1;
 
     setGuesses(prev => [guess, ...prev]);
 
     if (guess.won) setGameWon(true);
-    if (!guess.won && nextGuessCount >= MAX_GUESSES) setGameLost(true);
   }
 
-  function restart() {
-    setTarget(pickRandom(globeTargetCountries));
+  function resetRound() {
     setSelectedCountry(null);
     setGuesses([]);
     setGameWon(false);
-    setGameLost(false);
     setAlreadyGuessed(null);
   }
 
-  function giveUp() {
-    setSelectedCountry(target);
-    setGameLost(true);
+  function startNewRound() {
+    if (mode === GAME_MODES.PRACTICE) {
+      setPracticeTarget(pickRandom(globeTargetCountries));
+    }
+    resetRound();
+  }
+
+  function changeMode(nextMode) {
+    if (nextMode === mode) return;
+    setMode(nextMode);
+    if (nextMode === GAME_MODES.PRACTICE) {
+      setPracticeTarget(pickRandom(globeTargetCountries));
+    }
+    resetRound();
   }
 
   return (
     <GameLayout title="GLOBLE" emoji="🌍" onBack={onBack}>
       <section className="globle-play">
-        {!gameOver && (
+        <div className="globle-mode-tabs" role="tablist" aria-label="Modo de juego">
+          <button
+            type="button"
+            className={`mode-tab ${mode === GAME_MODES.PRACTICE ? "active" : ""}`}
+            aria-pressed={mode === GAME_MODES.PRACTICE}
+            onClick={() => changeMode(GAME_MODES.PRACTICE)}
+          >
+            Práctica
+          </button>
+          <button
+            type="button"
+            className={`mode-tab ${mode === GAME_MODES.DAILY ? "active" : ""}`}
+            aria-pressed={mode === GAME_MODES.DAILY}
+            onClick={() => changeMode(GAME_MODES.DAILY)}
+          >
+            Diario
+          </button>
+        </div>
+
+        {!gameWon && (
           <div className="globle-search">
             <CountryInput
               countries={countries}
               onSelect={handleGuess}
-              disabled={gameOver}
+              disabled={gameWon}
               placeholder="Escribí un país o hacé click en el globo…"
             />
           </div>
         )}
 
         <div className="globle-summary">
-          <span className="stat-pill">Intentos {guesses.length}/{MAX_GUESSES}</span>
+          <span className="stat-pill">Intentos {guesses.length}</span>
+          {mode === GAME_MODES.DAILY && (
+            <span className="stat-pill">Diario {dailyKey}</span>
+          )}
           <span className="stat-pill">Países {countries.length}</span>
           {closest && !gameWon && (
             <span className="stat-pill">
               Más cercano: {closest.country.name} · {closest.distanceKm.toLocaleString()} km
             </span>
           )}
+          <button
+            type="button"
+            className={`label-toggle ${showCountryLabels ? "active" : ""}`}
+            aria-pressed={showCountryLabels}
+            onClick={() => setShowCountryLabels(value => !value)}
+          >
+            {showCountryLabels ? "Ocultar nombres" : "Mostrar nombres"}
+          </button>
         </div>
 
         <GlobeMap
@@ -121,7 +198,8 @@ export default function GlobleGame({ onBack }) {
           guesses={guesses}
           selectedCountry={selectedCountry}
           targetCountry={target}
-          revealTarget={gameOver}
+          revealTarget={gameWon}
+          showCountryLabels={showCountryLabels}
           onCountryClick={handleGuess}
         />
       </section>
@@ -133,25 +211,8 @@ export default function GlobleGame({ onBack }) {
       {gameWon && (
         <div className="win-banner">
           <p>🏆 ¡Era <strong>{target.name}</strong>! Ganaste en <strong>{guesses.length}</strong> intento{guesses.length !== 1 ? "s" : ""}.</p>
-          <button className="btn btn-primary" onClick={restart}>
-            Jugar de nuevo
-          </button>
-        </div>
-      )}
-
-      {gameLost && (
-        <div className="lose-banner">
-          <p>El país misterioso era <strong>{target.name}</strong>.</p>
-          <button className="btn btn-primary" onClick={restart}>
-            Jugar de nuevo
-          </button>
-        </div>
-      )}
-
-      {!gameOver && guesses.length > 0 && (
-        <div className="globle-actions">
-          <button className="btn btn-ghost btn-small" onClick={giveUp}>
-            Rendirse
+          <button className="btn btn-primary" onClick={startNewRound}>
+            {mode === GAME_MODES.DAILY ? "Reintentar diario" : "Nuevo país"}
           </button>
         </div>
       )}

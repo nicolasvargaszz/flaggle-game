@@ -46,6 +46,7 @@ export default function GlobeMap({
   selectedCountry,
   targetCountry,
   revealTarget = false,
+  showCountryLabels = true,
   onCountryClick,
   geoJsonUrl = DEFAULT_GEOJSON_URL,
   globeImageUrl = DEFAULT_TEXTURE_URL,
@@ -206,11 +207,15 @@ export default function GlobeMap({
           const country = getFeatureCountry(feature);
           return country ? "rgba(255,255,255,0.38)" : "rgba(255,255,255,0.14)";
         }}
-        polygonLabel={feature => {
-          const country = getFeatureCountry(feature);
-          const name = country?.name ?? feature.properties?.NAME_ES ?? feature.properties?.name;
-          return `<div class="globe-tooltip">${name}</div>`;
-        }}
+        polygonLabel={
+          showCountryLabels
+            ? feature => {
+                const country = getFeatureCountry(feature);
+                const name = country?.name ?? feature.properties?.NAME_ES ?? feature.properties?.name;
+                return `<div class="globe-tooltip">${name}</div>`;
+              }
+            : undefined
+        }
         onPolygonHover={setHoveredFeature}
         onPolygonClick={handlePolygonClick}
         enablePointerInteraction
