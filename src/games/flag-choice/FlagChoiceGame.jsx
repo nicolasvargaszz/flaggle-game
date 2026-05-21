@@ -8,97 +8,184 @@ import LevelProgress from "./LevelProgress.jsx";
 import {
   LEVELS,
   createFlagChoiceRound,
-  getLevelFromScore,
   getLevelProgress,
+  getNextLevel,
+  getStreakBonus,
+  isFinalLevel,
 } from "./flagChoiceUtils.js";
 import "./flagChoice.css";
 
 const OPTION_COUNT = 4;
-const FEEDBACK_DELAY = 700;
+const CORRECT_FEEDBACK_DELAY = 700;
+const WRONG_FEEDBACK_DELAY = 1000;
+const LEVEL_UP_DELAY = 950;
+const BASE_CORRECT_POINTS = 10;
+
+function createInitialGameState() {
+  const initialLevel = LEVELS[0];
+
+  return {
+    lives: initialLevel.lives,
+    score: 0,
+    streak: 0,
+    bestStreak: 0,
+    currentLevel: initialLevel,
+    correctAnswersInCurrentLevel: 0,
+    totalQuestionsAnswered: 0,
+    usedCountries: [],
+    gameStatus: "playing",
+  };
+}
 
 export default function FlagChoiceGame({ onBack }) {
   const initialLevel = LEVELS[0];
+  const [game, setGame] = useState(() => createInitialGameState());
   const [round, setRound] = useState(() => createFlagChoiceRound(countries, initialLevel, [], OPTION_COUNT));
-  const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(initialLevel.lives);
-  const [usedCountryCodes, setUsedCountryCodes] = useState([]);
   const [selectedCode, setSelectedCode] = useState(null);
   const [feedback, setFeedback] = useState(null);
-  const [levelUpName, setLevelUpName] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
+  const [levelUpInfo, setLevelUpInfo] = useState(null);
   const timersRef = useRef([]);
 
-  const currentLevel = useMemo(() => getLevelFromScore(score), [score]);
-  const progress = useMemo(() => getLevelProgress(score), [score]);
+  const progress = useMemo(
+    () => getLevelProgress(game.currentLevel, game.correctAnswersInCurrentLevel),
+    [game.currentLevel, game.correctAnswersInCurrentLevel]
+  );
 
   useEffect(() => {
-    return () => {
-      timersRef.current.forEach(clearTimeout);
-    };
+    return () => clearQueuedTimers();
   }, []);
 
-  function queue(callback) {
-    const timer = setTimeout(callback, FEEDBACK_DELAY);
+  function clearQueuedTimers() {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  }
+
+  function queue(callback, delay) {
+    const timer = setTimeout(callback, delay);
     timersRef.current.push(timer);
   }
 
-  function startNextRound(nextScore, nextUsedCodes) {
-    const nextLevel = getLevelFromScore(nextScore);
-    setRound(createFlagChoiceRound(countries, nextLevel, nextUsedCodes, OPTION_COUNT));
-    setUsedCountryCodes(nextUsedCodes);
+  function resetQuestionState() {
     setSelectedCode(null);
     setFeedback(null);
-    setLevelUpName(null);
+    setLevelUpInfo(null);
+  }
+
+  function startNextRound(nextGame) {
+    setRound(createFlagChoiceRound(
+      countries,
+      nextGame.currentLevel,
+      nextGame.usedCountries,
+      OPTION_COUNT
+    ));
+    setGame({
+      ...nextGame,
+      gameStatus: "playing",
+    });
+    resetQuestionState();
   }
 
   function restart() {
-    timersRef.current.forEach(clearTimeout);
-    timersRef.current = [];
-    setRound(createFlagChoiceRound(countries, initialLevel, [], OPTION_COUNT));
-    setScore(0);
-    setLives(initialLevel.lives);
-    setUsedCountryCodes([]);
-    setSelectedCode(null);
-    setFeedback(null);
-    setLevelUpName(null);
-    setGameOver(false);
+    clearQueuedTimers();
+    const nextGame = createInitialGameState();
+    setRound(createFlagChoiceRound(countries, nextGame.currentLevel, [], OPTION_COUNT));
+    setGame(nextGame);
+    resetQuestionState();
   }
 
-  function handleChoice(country) {
-    if (selectedCode || gameOver) return;
+  function handleCorrectAnswer(nextUsedCountries) {
+    const nextStreak = game.streak + 1;
+    const streakBonus = getStreakBonus(nextStreak);
+    const pointsEarned = BASE_CORRECT_POINTS + streakBonus;
+    const nextCorrectAnswers = game.correctAnswersInCurrentLevel + 1;
+    const shouldLevelUp = !isFinalLevel(game.currentLevel)
+      && nextCorrectAnswers >= game.currentLevel.questionsToAdvance;
+    const feedbackGame = {
+      ...game,
+      score: game.score + pointsEarned,
+      streak: nextStreak,
+      bestStreak: Math.max(game.bestStreak, nextStreak),
+      correctAnswersInCurrentLevel: nextCorrectAnswers,
+      totalQuestionsAnswered: game.totalQuestionsAnswered + 1,
+      usedCountries: nextUsedCountries,
+      gameStatus: "feedback",
+    };
 
-    const isCorrect = country.code3 === round.target.code3;
-    const nextUsedCodes = [...usedCountryCodes, round.target.code3];
+    setGame(feedbackGame);
+    setFeedback({
+      type: "correct",
+      points: pointsEarned,
+      bonus: streakBonus,
+    });
 
-    setSelectedCode(country.code3);
-    setFeedback(isCorrect ? "correct" : "wrong");
-
-    if (isCorrect) {
-      const nextScore = score + 1;
-      const nextLevel = getLevelFromScore(nextScore);
-      const didLevelUp = nextLevel.id !== currentLevel.id;
-
-      setScore(nextScore);
-      if (didLevelUp) {
-        setLives(nextLevel.lives);
-        setLevelUpName(nextLevel.name);
-      }
-
-      queue(() => startNextRound(nextScore, nextUsedCodes));
+    if (!shouldLevelUp) {
+      queue(() => startNextRound(feedbackGame), CORRECT_FEEDBACK_DELAY);
       return;
     }
 
-    const nextLives = lives - 1;
-    setLives(nextLives);
+    const nextLevel = getNextLevel(game.currentLevel);
+    const recoveredLives = Math.min(feedbackGame.lives + 1, nextLevel.lives);
+    const levelUpGame = {
+      ...feedbackGame,
+      lives: recoveredLives,
+      currentLevel: nextLevel,
+      correctAnswersInCurrentLevel: 0,
+      gameStatus: "levelUp",
+    };
+
+    queue(() => {
+      setGame(levelUpGame);
+      setFeedback(null);
+      setSelectedCode(null);
+      setLevelUpInfo({
+        currentLevel: nextLevel,
+        recoveredLife: recoveredLives > feedbackGame.lives,
+      });
+      queue(() => startNextRound(levelUpGame), LEVEL_UP_DELAY);
+    }, CORRECT_FEEDBACK_DELAY);
+  }
+
+  function handleWrongAnswer(nextUsedCountries) {
+    const nextLives = game.lives - 1;
+    const feedbackGame = {
+      ...game,
+      lives: nextLives,
+      streak: 0,
+      totalQuestionsAnswered: game.totalQuestionsAnswered + 1,
+      usedCountries: nextUsedCountries,
+      gameStatus: "feedback",
+    };
+
+    setGame(feedbackGame);
+    setFeedback({ type: "wrong" });
 
     queue(() => {
       if (nextLives <= 0) {
-        setUsedCountryCodes(nextUsedCodes);
-        setGameOver(true);
+        setGame({
+          ...feedbackGame,
+          gameStatus: "gameOver",
+        });
         return;
       }
-      startNextRound(score, nextUsedCodes);
-    });
+
+      startNextRound(feedbackGame);
+    }, WRONG_FEEDBACK_DELAY);
+  }
+
+  function handleChoice(country) {
+    if (game.gameStatus !== "playing") return;
+
+    const isCorrect = country.code3 === round.target.code3;
+    const nextUsedCountries = [...game.usedCountries, round.target.code3];
+
+    setSelectedCode(country.code3);
+
+    if (isCorrect) {
+      handleCorrectAnswer(nextUsedCountries);
+      return;
+    }
+
+    handleWrongAnswer(nextUsedCountries);
   }
 
   function getOptionClass(country) {
@@ -108,43 +195,76 @@ export default function FlagChoiceGame({ onBack }) {
     return "muted";
   }
 
-  const gameState = gameOver
-    ? "gameOver"
-    : levelUpName
-      ? "levelUp"
-      : feedback ?? "idle";
-
   return (
     <GameLayout title="Flag Choice" emoji="🎌" onBack={onBack} className="flag-choice-layout">
-      {gameOver ? (
+      {game.gameStatus === "gameOver" ? (
         <section className="flag-choice-end">
           <div className="flag-choice-end-icon">🌍</div>
           <h3>Game Over</h3>
-          <p>
-            Llegaste a <strong>{score}</strong> respuesta{score !== 1 ? "s" : ""} correcta{score !== 1 ? "s" : ""}.
-          </p>
-          <p>
-            Nivel alcanzado: <strong>{currentLevel.name}</strong>
-          </p>
-          <button className="btn btn-primary" onClick={restart}>
-            Reiniciar
-          </button>
+
+          <div className="flag-choice-results">
+            <span>
+              Score final
+              <strong>{game.score}</strong>
+            </span>
+            <span>
+              Nivel alcanzado
+              <strong>{game.currentLevel.name}</strong>
+            </span>
+            <span>
+              Preguntas
+              <strong>{game.totalQuestionsAnswered}</strong>
+            </span>
+            <span>
+              Mejor racha
+              <strong>{game.bestStreak}</strong>
+            </span>
+          </div>
+
+          <div className="flag-choice-end-actions">
+            <button className="btn btn-primary" onClick={restart}>
+              Play Again
+            </button>
+            <button className="btn btn-ghost" onClick={onBack}>
+              Back to Menu
+            </button>
+          </div>
         </section>
       ) : (
-        <section className={`flag-choice-shell ${gameState}`}>
-          <FlagChoiceHeader currentLevel={currentLevel} lives={lives} score={score} />
-          <LevelProgress currentLevel={currentLevel} progress={progress} />
-          <FlagQuestionCard
-            targetCountry={round.target}
-            feedback={feedback}
-            levelUpName={levelUpName}
+        <section className={`flag-choice-shell ${game.gameStatus}`}>
+          <FlagChoiceHeader
+            currentLevel={game.currentLevel}
+            lives={game.lives}
+            score={game.score}
+            streak={game.streak}
           />
-          <AnswerOptions
-            options={round.options}
-            selectedCode={selectedCode}
-            getOptionClass={getOptionClass}
-            onChoice={handleChoice}
-          />
+          <LevelProgress currentLevel={game.currentLevel} progress={progress} />
+
+          {game.gameStatus === "levelUp" ? (
+            <section className="flag-choice-level-up" aria-live="polite">
+              <span>{levelUpInfo?.currentLevel.id === "dios" ? "Modo Dios" : "Level Up"}</span>
+              <h3>{levelUpInfo?.currentLevel.name}</h3>
+              <p>
+                {levelUpInfo?.currentLevel.id === "dios"
+                  ? "Ahora solo aparecen países de dificultad Dios. Seguís jugando hasta perder."
+                  : `Avanzaste al nivel ${levelUpInfo?.currentLevel.difficulty}.`}
+              </p>
+              {levelUpInfo?.recoveredLife && <strong>Recuperaste 1 vida</strong>}
+            </section>
+          ) : (
+            <>
+              <FlagQuestionCard
+                targetCountry={round.target}
+                feedback={feedback}
+              />
+              <AnswerOptions
+                options={round.options}
+                selectedCode={selectedCode}
+                getOptionClass={getOptionClass}
+                onChoice={handleChoice}
+              />
+            </>
+          )}
         </section>
       )}
     </GameLayout>

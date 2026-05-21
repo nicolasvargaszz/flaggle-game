@@ -1,5 +1,5 @@
-export default function FlagQuestionCard({ targetCountry, feedback, levelUpName }) {
-  const feedbackText = feedback ?? "idle";
+export default function FlagQuestionCard({ targetCountry, feedback }) {
+  const feedbackText = feedback?.type ?? "idle";
 
   return (
     <section className={`flag-question-card ${feedbackText}`}>
@@ -12,13 +12,16 @@ export default function FlagQuestionCard({ targetCountry, feedback, levelUpName 
       </div>
 
       <div className={`flag-choice-feedback ${feedbackText}`} aria-live="polite">
-        {feedback === "correct" && (
+        {feedback?.type === "correct" && (
           <>
             Correcto: <strong>{targetCountry.name}</strong>
-            {levelUpName && <> · Subiste a <strong>{levelUpName}</strong></>}
+            <span>
+              +{feedback.points} puntos
+              {feedback.bonus > 0 && <> · bonus racha +{feedback.bonus}</>}
+            </span>
           </>
         )}
-        {feedback === "wrong" && <>Era <strong>{targetCountry.name}</strong></>}
+        {feedback?.type === "wrong" && <>Era <strong>{targetCountry.name}</strong></>}
         {!feedback && "¿Qué país tiene esta bandera?"}
       </div>
     </section>

@@ -1,4 +1,4 @@
-export default function FlagChoiceHeader({ currentLevel, lives, score }) {
+export default function FlagChoiceHeader({ currentLevel, lives, score, streak }) {
   return (
     <div className="flag-choice-mobile-header">
       <div className="flag-choice-header-stat" aria-label={`${lives} vidas`}>
@@ -20,6 +20,7 @@ export default function FlagChoiceHeader({ currentLevel, lives, score }) {
       <div className="flag-choice-header-stat right">
         <span className="flag-choice-header-label">Score</span>
         <strong>{score}</strong>
+        <small>Racha {streak}</small>
       </div>
     </div>
   );

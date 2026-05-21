@@ -5,32 +5,32 @@ export const LEVELS = [
     id: "principiante",
     name: DIFFICULTY_LABELS[1],
     difficulty: 1,
-    lives: 5,
-    questionsToAdvance: 3,
+    lives: 3,
+    questionsToAdvance: 5,
     description: "Países vecinos, grandes o muy reconocidos.",
   },
   {
     id: "facil",
     name: DIFFICULTY_LABELS[2],
     difficulty: 2,
-    lives: 5,
-    questionsToAdvance: 4,
+    lives: 3,
+    questionsToAdvance: 6,
     description: "Países conocidos y banderas relativamente familiares.",
   },
   {
     id: "turista",
     name: DIFFICULTY_LABELS[3],
     difficulty: 3,
-    lives: 4,
-    questionsToAdvance: 5,
+    lives: 3,
+    questionsToAdvance: 7,
     description: "Destinos turísticos y países bastante reconocibles.",
   },
   {
     id: "embajador",
     name: DIFFICULTY_LABELS[4],
     difficulty: 4,
-    lives: 4,
-    questionsToAdvance: 5,
+    lives: 3,
+    questionsToAdvance: 8,
     description: "Países de dificultad media.",
   },
   {
@@ -38,7 +38,7 @@ export const LEVELS = [
     name: DIFFICULTY_LABELS[5],
     difficulty: 5,
     lives: 3,
-    questionsToAdvance: 6,
+    questionsToAdvance: 9,
     description: "Países menos comunes para un estudiante promedio.",
   },
   {
@@ -46,16 +46,16 @@ export const LEVELS = [
     name: DIFFICULTY_LABELS[6],
     difficulty: 6,
     lives: 3,
-    questionsToAdvance: 6,
+    questionsToAdvance: 10,
     description: "Países difíciles o banderas menos conocidas.",
   },
   {
     id: "dios",
     name: DIFFICULTY_LABELS[7],
     difficulty: 7,
-    lives: 2,
-    questionsToAdvance: 8,
-    description: "Microestados, islas y países muy difíciles.",
+    lives: 3,
+    questionsToAdvance: Number.POSITIVE_INFINITY,
+    description: "Modo Dios: microestados, islas y países muy difíciles hasta que pierdas.",
   },
 ];
 
@@ -316,21 +316,38 @@ export function getLevelFromScore(score) {
   return LEVELS[LEVELS.length - 1];
 }
 
-export function getLevelProgress(score) {
-  const currentLevel = getLevelFromScore(score);
-  const currentIndex = LEVELS.findIndex(level => level.id === currentLevel.id);
-  const scoreFloor = LEVELS
-    .slice(0, currentIndex)
-    .reduce((total, level) => total + level.questionsToAdvance, 0);
-  const currentProgress = score - scoreFloor;
-  const isMaxLevel = currentIndex === LEVELS.length - 1;
+export function getLevelIndex(level) {
+  const currentLevel = normalizeLevel(level);
+  return Math.max(0, LEVELS.findIndex(item => item.id === currentLevel.id));
+}
+
+export function getNextLevel(level) {
+  const currentIndex = getLevelIndex(level);
+  return LEVELS[Math.min(currentIndex + 1, LEVELS.length - 1)];
+}
+
+export function isFinalLevel(level) {
+  return getLevelIndex(level) === LEVELS.length - 1;
+}
+
+export function getStreakBonus(streak) {
+  if (streak >= 5) return 10;
+  if (streak >= 3) return 5;
+  return 0;
+}
+
+export function getLevelProgress(currentLevel, correctAnswersInCurrentLevel = 0) {
+  const level = normalizeLevel(currentLevel);
+  const isMaxLevel = isFinalLevel(level);
+  const required = level.questionsToAdvance;
+  const current = Math.max(0, correctAnswersInCurrentLevel);
 
   return {
-    current: Math.max(0, currentProgress),
-    required: currentLevel.questionsToAdvance,
+    current,
+    required,
     percent: isMaxLevel
       ? 100
-      : Math.min(100, Math.round((currentProgress / currentLevel.questionsToAdvance) * 100)),
+      : Math.min(100, Math.round((current / required) * 100)),
     isMaxLevel,
   };
 }

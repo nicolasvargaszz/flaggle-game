@@ -10,7 +10,7 @@ export default function LevelProgress({ currentLevel, progress }) {
       <div className="flag-choice-progress">
         <span>
           {progress.isMaxLevel
-            ? "Nivel máximo"
+            ? "Modo Dios"
             : `${progress.current}/${progress.required} para avanzar`}
         </span>
         <div className="flag-choice-progress-track">
