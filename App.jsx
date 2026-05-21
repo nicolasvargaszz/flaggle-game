@@ -1,5 +1,6 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { GAME_MODES } from "./gameModes.js";
+import { LANDMARK_SLIDES } from "./src/data/homeLandmarks.js";
 import "./style.css";
 
 const FlagleGame = lazy(() => import("./Flaglegame.jsx"));
@@ -94,41 +95,118 @@ function LoadingScreen() {
 }
 
 function HomeScreen({ onSelect }) {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const slide = LANDMARK_SLIDES[activeSlide];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide(index => (index + 1) % LANDMARK_SLIDES.length);
+    }, 5200);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  function goToSlide(index) {
+    setActiveSlide((index + LANDMARK_SLIDES.length) % LANDMARK_SLIDES.length);
+  }
+
   return (
     <div className="home-screen">
-      <div className="home-hero">
-        <div className="home-logo">🗺️</div>
-        <h1 className="home-title">GeoGuess Games</h1>
-        <p className="home-subtitle">
-          Ponés a prueba tu conocimiento de países, banderas y geografía.
-        </p>
-      </div>
-      <div className="game-cards">
-        <button className="game-card" onClick={() => onSelect(SCREENS.FLAGLE)}>
-          <span className="game-card-emoji">🚩</span>
-          <h2 className="game-card-title">Flagle</h2>
-          <p className="game-card-desc">
-            Adivina el país a partir de su bandera. Cada intento revela más píxeles.
-          </p>
-          <span className="game-card-cta">Jugar →</span>
-        </button>
-        <button className="game-card" onClick={() => onSelect(SCREENS.GLOBLE)}>
-          <span className="game-card-emoji">🌍</span>
-          <h2 className="game-card-title">Globle</h2>
-          <p className="game-card-desc">
-            Adivina el país misterioso. Te decimos qué tan cerca o lejos estás en km.
-          </p>
-          <span className="game-card-cta">Jugar →</span>
-        </button>
-        <button className="game-card" onClick={() => onSelect(SCREENS.FLAG_CHOICE)}>
-          <span className="game-card-emoji">🎌</span>
-          <h2 className="game-card-title">Flag Choice</h2>
-          <p className="game-card-desc">
-            Mira una bandera y elegí el país correcto entre cuatro opciones.
-          </p>
-          <span className="game-card-cta">Jugar →</span>
-        </button>
-      </div>
+      <section className="home-showcase" aria-label="Lugares históricos del mundo">
+        <div className="home-carousel">
+          {LANDMARK_SLIDES.map((item, index) => (
+            <img
+              key={item.title}
+              src={item.image}
+              alt={`${item.title}, ${item.location}`}
+              className={`home-carousel-image ${index === activeSlide ? "active" : ""}`}
+              style={{ objectPosition: item.position }}
+            />
+          ))}
+          <div className="home-carousel-scrim" />
+
+          <div className="home-hero">
+            <span className="home-kicker">Banderas, países y mapas</span>
+            <h1 className="home-title">GeoGuess Games</h1>
+            <p className="home-subtitle">
+              Poné a prueba tu conocimiento del mundo con tres juegos rápidos de geografía.
+            </p>
+          </div>
+
+          <div className="home-carousel-caption">
+            <div>
+              <span>{slide.title}</span>
+              <strong>{slide.location}</strong>
+            </div>
+            <a href={slide.sourceUrl} target="_blank" rel="noreferrer">
+              Foto: Wikimedia Commons
+            </a>
+          </div>
+
+          <button
+            className="home-carousel-btn prev"
+            aria-label="Lugar anterior"
+            onClick={() => goToSlide(activeSlide - 1)}
+          >
+            ‹
+          </button>
+          <button
+            className="home-carousel-btn next"
+            aria-label="Lugar siguiente"
+            onClick={() => goToSlide(activeSlide + 1)}
+          >
+            ›
+          </button>
+        </div>
+
+        <div className="home-carousel-dots" aria-label="Elegir lugar del carrusel">
+          {LANDMARK_SLIDES.map((item, index) => (
+            <button
+              key={item.title}
+              className={index === activeSlide ? "active" : ""}
+              aria-label={`Mostrar ${item.title}`}
+              onClick={() => goToSlide(index)}
+            />
+          ))}
+        </div>
+      </section>
+
+      <section className="home-games" aria-label="Juegos disponibles">
+        <div className="home-games-header">
+          <span className="home-section-kicker">Elegí un modo</span>
+          <h2>¿Qué querés jugar?</h2>
+        </div>
+        <div className="game-cards">
+          <button className="game-card flagle-card" onClick={() => onSelect(SCREENS.FLAGLE)}>
+            <span className="game-card-emoji">🚩</span>
+            <span className="game-card-tag">Pixels</span>
+            <h3 className="game-card-title">Flagle</h3>
+            <p className="game-card-desc">
+              Adiviná el país a partir de su bandera. Cada intento revela más píxeles.
+            </p>
+            <span className="game-card-cta">Jugar</span>
+          </button>
+          <button className="game-card globle-card" onClick={() => onSelect(SCREENS.GLOBLE)}>
+            <span className="game-card-emoji">🌍</span>
+            <span className="game-card-tag">Mapa 3D</span>
+            <h3 className="game-card-title">Globle</h3>
+            <p className="game-card-desc">
+              Encontrá el país misterioso con pistas de distancia y cercanía.
+            </p>
+            <span className="game-card-cta">Jugar</span>
+          </button>
+          <button className="game-card choice-card" onClick={() => onSelect(SCREENS.FLAG_CHOICE)}>
+            <span className="game-card-emoji">🎌</span>
+            <span className="game-card-tag">Quiz</span>
+            <h3 className="game-card-title">Flag Choice</h3>
+            <p className="game-card-desc">
+              Mirá una bandera y elegí el país correcto entre cuatro opciones.
+            </p>
+            <span className="game-card-cta">Jugar</span>
+          </button>
+        </div>
+      </section>
+
       <footer className="home-footer">
         Inspirado en Flagle &amp; Globle · Prototipo educativo
       </footer>
