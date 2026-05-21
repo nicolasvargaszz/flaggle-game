@@ -1,20 +1,30 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import countries from "../../data/countries.js";
 import GameLayout from "../../../gamelayout.jsx";
-import { createFlagChoiceRound } from "./flagChoiceUtils.js";
+import {
+  LEVELS,
+  createFlagChoiceRound,
+  getLevelFromScore,
+  getLevelProgress,
+} from "./flagChoiceUtils.js";
 
-const MAX_LIVES = 3;
 const OPTION_COUNT = 4;
 const FEEDBACK_DELAY = 950;
 
 export default function FlagChoiceGame({ onBack }) {
-  const [round, setRound] = useState(() => createFlagChoiceRound(countries, null, OPTION_COUNT));
+  const initialLevel = LEVELS[0];
+  const [round, setRound] = useState(() => createFlagChoiceRound(countries, initialLevel, [], OPTION_COUNT));
   const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(MAX_LIVES);
+  const [lives, setLives] = useState(initialLevel.lives);
+  const [usedCountryCodes, setUsedCountryCodes] = useState([]);
   const [selectedCode, setSelectedCode] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [levelUpName, setLevelUpName] = useState(null);
   const [gameOver, setGameOver] = useState(false);
   const timersRef = useRef([]);
+
+  const currentLevel = useMemo(() => getLevelFromScore(score), [score]);
+  const progress = useMemo(() => getLevelProgress(score), [score]);
 
   useEffect(() => {
     return () => {
@@ -27,20 +37,25 @@ export default function FlagChoiceGame({ onBack }) {
     timersRef.current.push(timer);
   }
 
-  function startNextRound() {
-    setRound(prevRound => createFlagChoiceRound(countries, prevRound.target.code3, OPTION_COUNT));
+  function startNextRound(nextScore, nextUsedCodes) {
+    const nextLevel = getLevelFromScore(nextScore);
+    setRound(createFlagChoiceRound(countries, nextLevel, nextUsedCodes, OPTION_COUNT));
+    setUsedCountryCodes(nextUsedCodes);
     setSelectedCode(null);
     setFeedback(null);
+    setLevelUpName(null);
   }
 
   function restart() {
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
-    setRound(createFlagChoiceRound(countries, round.target.code3, OPTION_COUNT));
+    setRound(createFlagChoiceRound(countries, initialLevel, [], OPTION_COUNT));
     setScore(0);
-    setLives(MAX_LIVES);
+    setLives(initialLevel.lives);
+    setUsedCountryCodes([]);
     setSelectedCode(null);
     setFeedback(null);
+    setLevelUpName(null);
     setGameOver(false);
   }
 
@@ -48,20 +63,36 @@ export default function FlagChoiceGame({ onBack }) {
     if (selectedCode || gameOver) return;
 
     const isCorrect = country.code3 === round.target.code3;
-    const nextLives = isCorrect ? lives : lives - 1;
+    const nextUsedCodes = [...usedCountryCodes, round.target.code3];
 
     setSelectedCode(country.code3);
     setFeedback(isCorrect ? "correct" : "wrong");
 
-    if (isCorrect) setScore(currentScore => currentScore + 1);
-    if (!isCorrect) setLives(nextLives);
+    if (isCorrect) {
+      const nextScore = score + 1;
+      const nextLevel = getLevelFromScore(nextScore);
+      const didLevelUp = nextLevel.id !== currentLevel.id;
+
+      setScore(nextScore);
+      if (didLevelUp) {
+        setLives(nextLevel.lives);
+        setLevelUpName(nextLevel.name);
+      }
+
+      queue(() => startNextRound(nextScore, nextUsedCodes));
+      return;
+    }
+
+    const nextLives = lives - 1;
+    setLives(nextLives);
 
     queue(() => {
       if (nextLives <= 0) {
+        setUsedCountryCodes(nextUsedCodes);
         setGameOver(true);
         return;
       }
-      startNextRound();
+      startNextRound(score, nextUsedCodes);
     });
   }
 
@@ -81,6 +112,9 @@ export default function FlagChoiceGame({ onBack }) {
           <p>
             Llegaste a <strong>{score}</strong> respuesta{score !== 1 ? "s" : ""} correcta{score !== 1 ? "s" : ""}.
           </p>
+          <p>
+            Nivel alcanzado: <strong>{currentLevel.name}</strong>
+          </p>
           <button className="btn btn-primary" onClick={restart}>
             Reiniciar
           </button>
@@ -89,13 +123,34 @@ export default function FlagChoiceGame({ onBack }) {
         <section className="flag-choice-shell">
           <div className="flag-choice-stats">
             <span className="stat-pill">Puntos {score}</span>
+            <span className="stat-pill">Nivel {currentLevel.difficulty}: {currentLevel.name}</span>
             <span className="flag-choice-lives" aria-label={`${lives} vidas`}>
-              {Array.from({ length: MAX_LIVES }, (_, index) => (
+              {Array.from({ length: currentLevel.lives }, (_, index) => (
                 <span key={index} className={index < lives ? "" : "empty"}>
                   🌍
                 </span>
               ))}
             </span>
+          </div>
+
+          <div className="flag-choice-level-card">
+            <div>
+              <strong>{currentLevel.name}</strong>
+              <p>{currentLevel.description}</p>
+            </div>
+            <div className="flag-choice-progress">
+              <span>
+                {progress.isMaxLevel
+                  ? "Nivel máximo"
+                  : `${progress.current}/${progress.required} para avanzar`}
+              </span>
+              <div className="flag-choice-progress-track">
+                <div
+                  className="flag-choice-progress-fill"
+                  style={{ width: `${progress.percent}%` }}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="flag-choice-card">
@@ -108,7 +163,12 @@ export default function FlagChoiceGame({ onBack }) {
             </div>
 
             <div className={`flag-choice-feedback ${feedback ?? ""}`} aria-live="polite">
-              {feedback === "correct" && <>Correcto: <strong>{round.target.name}</strong></>}
+              {feedback === "correct" && (
+                <>
+                  Correcto: <strong>{round.target.name}</strong>
+                  {levelUpName && <> · Subiste a <strong>{levelUpName}</strong></>}
+                </>
+              )}
               {feedback === "wrong" && <>Incorrecto. Era <strong>{round.target.name}</strong></>}
               {!feedback && "Elegí el país correcto"}
             </div>

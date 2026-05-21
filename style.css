@@ -529,6 +529,54 @@ html, body, #root {
   filter: grayscale(1);
 }
 
+.flag-choice-level-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .85rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr minmax(180px, 260px);
+  align-items: center;
+  gap: 1rem;
+}
+
+.flag-choice-level-card strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.flag-choice-level-card p {
+  color: var(--text-muted);
+  font-size: .86rem;
+  margin-top: .15rem;
+}
+
+.flag-choice-progress {
+  display: grid;
+  gap: .35rem;
+}
+
+.flag-choice-progress span {
+  color: var(--text-muted);
+  font-size: .78rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.flag-choice-progress-track {
+  height: 9px;
+  background: var(--bg-input);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.flag-choice-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 999px;
+  transition: width .25s ease;
+}
+
 .flag-choice-card,
 .flag-choice-end {
   background: var(--bg-card);
@@ -820,6 +868,8 @@ html, body, #root {
   .guess-item  { flex-wrap: wrap; }
   .guess-hint-label { min-width: unset; }
   .game-cards  { grid-template-columns: 1fr; }
+  .flag-choice-level-card { grid-template-columns: 1fr; }
+  .flag-choice-progress span { text-align: left; }
   .flag-choice-options { grid-template-columns: 1fr; }
   .flag-choice-flag-frame { min-height: 200px; padding: .75rem; }
   .flag-choice-card { padding: .9rem; }
