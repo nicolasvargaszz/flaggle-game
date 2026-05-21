@@ -1,27 +1,71 @@
 import { Suspense, lazy, useState } from "react";
+import { GAME_MODES } from "./gameModes.js";
 import "./style.css";
 
 const FlagleGame = lazy(() => import("./Flaglegame.jsx"));
 const GlobleGame = lazy(() => import("./Globegame.jsx"));
 const SCREENS = { HOME: "home", FLAGLE: "flagle", GLOBLE: "globle" };
+const GAME_LABELS = {
+  [SCREENS.FLAGLE]: {
+    title: "Flagle",
+    emoji: "🚩",
+    dailyTitle: "La bandera del día",
+    dailyDesc: "Una bandera fija para todos. Cambia cada 24 horas.",
+    practiceDesc: "Banderas aleatorias para practicar sin presión.",
+  },
+  [SCREENS.GLOBLE]: {
+    title: "Globle",
+    emoji: "🌍",
+    dailyTitle: "El país del día",
+    dailyDesc: "Un país fijo para todos. Cambia cada 24 horas.",
+    practiceDesc: "Países aleatorios para jugar todas las rondas que quieras.",
+  },
+};
 
 export default function App() {
   const [screen, setScreen] = useState(SCREENS.HOME);
+  const [pendingGame, setPendingGame] = useState(null);
+  const [gameMode, setGameMode] = useState(GAME_MODES.PRACTICE);
+
+  function openModeSelect(game) {
+    setPendingGame(game);
+  }
+
+  function startGame(mode) {
+    setGameMode(mode);
+    setScreen(pendingGame);
+    setPendingGame(null);
+  }
+
+  function goHome() {
+    setScreen(SCREENS.HOME);
+    setPendingGame(null);
+  }
+
   if (screen === SCREENS.FLAGLE) {
     return (
       <Suspense fallback={<LoadingScreen />}>
-        <FlagleGame onBack={() => setScreen(SCREENS.HOME)} />
+        <FlagleGame initialMode={gameMode} onBack={goHome} />
       </Suspense>
     );
   }
   if (screen === SCREENS.GLOBLE) {
     return (
       <Suspense fallback={<LoadingScreen />}>
-        <GlobleGame onBack={() => setScreen(SCREENS.HOME)} />
+        <GlobleGame initialMode={gameMode} onBack={goHome} />
       </Suspense>
     );
   }
-  return <HomeScreen onSelect={setScreen} />;
+  if (pendingGame) {
+    return (
+      <ModeSelectScreen
+        game={GAME_LABELS[pendingGame]}
+        onBack={() => setPendingGame(null)}
+        onSelect={startGame}
+      />
+    );
+  }
+  return <HomeScreen onSelect={openModeSelect} />;
 }
 
 function LoadingScreen() {
@@ -63,6 +107,33 @@ function HomeScreen({ onSelect }) {
       <footer className="home-footer">
         Inspirado en Flagle &amp; Globle · Prototipo educativo
       </footer>
+    </div>
+  );
+}
+
+function ModeSelectScreen({ game, onBack, onSelect }) {
+  return (
+    <div className="mode-select-screen">
+      <button className="btn btn-ghost back-btn mode-back-btn" onClick={onBack}>
+        ← Volver
+      </button>
+      <div className="mode-select-header">
+        <span className="mode-select-emoji">{game.emoji}</span>
+        <h1 className="mode-select-title">{game.title}</h1>
+        <p className="mode-select-subtitle">Elegí cómo querés jugar.</p>
+      </div>
+      <div className="mode-choice-grid">
+        <button className="mode-choice-card" onClick={() => onSelect(GAME_MODES.PRACTICE)}>
+          <span className="mode-choice-kicker">Modo</span>
+          <strong>Práctica</strong>
+          <p>{game.practiceDesc}</p>
+        </button>
+        <button className="mode-choice-card daily" onClick={() => onSelect(GAME_MODES.DAILY)}>
+          <span className="mode-choice-kicker">Reto diario</span>
+          <strong>{game.dailyTitle}</strong>
+          <p>{game.dailyDesc}</p>
+        </button>
+      </div>
     </div>
   );
 }

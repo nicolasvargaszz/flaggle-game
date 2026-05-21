@@ -61,6 +61,7 @@ try {
     const page = await browser.newPage({ viewport });
     await page.goto(URL, { waitUntil: "networkidle" });
     await page.getByRole("button", { name: /Globle/i }).click();
+    await page.getByRole("button", { name: /Práctica/i }).click();
     await page.getByRole("button", { name: "Diario" }).click();
     await page.getByText(/Diario \d{4}-\d{2}-\d{2}/).waitFor({ timeout: 5000 });
     await page.getByRole("button", { name: "Práctica" }).click();

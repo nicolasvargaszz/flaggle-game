@@ -27,6 +27,7 @@ import {
 } from "./pixelmatch.js";
 import CountryInput from "./countryinput.jsx";
 import GameLayout from "./gamelayout.jsx";
+import { GAME_MODES, getDailyCountry, getDailyKey } from "./gameModes.js";
 
 const MAX_GUESSES = 6;
 
@@ -34,8 +35,10 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export default function FlagleGame({ onBack }) {
-  const [target, setTarget] = useState(() => pickRandom(countries));
+export default function FlagleGame({ initialMode = GAME_MODES.PRACTICE, onBack }) {
+  const [mode, setMode] = useState(initialMode);
+  const [dailyKey, setDailyKey] = useState(() => getDailyKey());
+  const [practiceTarget, setPracticeTarget] = useState(() => pickRandom(countries));
   const [guesses, setGuesses] = useState([]);           // [{ country, matchPct }]
   const [gameWon, setGameWon] = useState(false);
   const [gameLost, setGameLost] = useState(false);
@@ -50,6 +53,11 @@ export default function FlagleGame({ onBack }) {
 
   const guessedCodes = useMemo(() => new Set(guesses.map(g => g.country.code3)), [guesses]);
   const gameOver = gameWon || gameLost;
+  const dailyTarget = useMemo(
+    () => getDailyCountry(countries, dailyKey, "flagle"),
+    [dailyKey]
+  );
+  const target = mode === GAME_MODES.DAILY ? dailyTarget : practiceTarget;
 
   const revealFullFlag = useCallback(() => {
     if (!canvasRef.current || !targetImageDataRef.current) return;
@@ -87,6 +95,20 @@ export default function FlagleGame({ onBack }) {
   useEffect(() => {
     loadTarget(target);
   }, [target, loadTarget]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const currentKey = getDailyKey();
+      setDailyKey(prevKey => (prevKey === currentKey ? prevKey : currentKey));
+    }, 60 * 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (mode !== GAME_MODES.DAILY) return;
+    resetRound();
+  }, [dailyKey, mode]);
 
   // When canvas mounts after a restart, redraw current mask
   useEffect(() => {
@@ -147,13 +169,28 @@ export default function FlagleGame({ onBack }) {
     }
   }
 
-  function restart() {
+  function resetRound() {
     setGuesses([]);
     setGameWon(false);
     setGameLost(false);
     setError(null);
     setAlreadyGuessed(null);
-    setTarget(pickRandom(countries));
+  }
+
+  function startNewRound() {
+    if (mode === GAME_MODES.PRACTICE) {
+      setPracticeTarget(pickRandom(countries));
+    }
+    resetRound();
+  }
+
+  function changeMode(nextMode) {
+    if (nextMode === mode) return;
+    setMode(nextMode);
+    if (nextMode === GAME_MODES.PRACTICE) {
+      setPracticeTarget(pickRandom(countries));
+    }
+    resetRound();
   }
 
   function giveUp() {
@@ -166,6 +203,25 @@ export default function FlagleGame({ onBack }) {
 
   return (
     <GameLayout title="Flagle" emoji="🚩" onBack={onBack}>
+      <div className="mode-tabs" role="tablist" aria-label="Modo de juego">
+        <button
+          type="button"
+          className={`mode-tab ${mode === GAME_MODES.PRACTICE ? "active" : ""}`}
+          aria-pressed={mode === GAME_MODES.PRACTICE}
+          onClick={() => changeMode(GAME_MODES.PRACTICE)}
+        >
+          Práctica
+        </button>
+        <button
+          type="button"
+          className={`mode-tab ${mode === GAME_MODES.DAILY ? "active" : ""}`}
+          aria-pressed={mode === GAME_MODES.DAILY}
+          onClick={() => changeMode(GAME_MODES.DAILY)}
+        >
+          La bandera del día
+        </button>
+      </div>
+
       {/* Canvas — the progressively revealed flag */}
       <div className="flagle-canvas-wrapper">
         {loading && <div className="flagle-loading">Cargando bandera…</div>}
@@ -190,6 +246,9 @@ export default function FlagleGame({ onBack }) {
           </p>
           </>
         )}
+        {mode === GAME_MODES.DAILY && (
+          <p className="attempt-meta">Reto diario {dailyKey}</p>
+        )}
       </div>
 
       {error && <p className="error-msg">⚠ {error}</p>}
@@ -202,8 +261,8 @@ export default function FlagleGame({ onBack }) {
             <strong>{guesses.length}</strong> intento
             {guesses.length !== 1 ? "s" : ""}.
           </p>
-          <button className="btn btn-primary" onClick={restart}>
-            Jugar de nuevo
+          <button className="btn btn-primary" onClick={startNewRound}>
+            {mode === GAME_MODES.DAILY ? "Reintentar bandera" : "Nueva bandera"}
           </button>
         </div>
       )}
@@ -213,8 +272,8 @@ export default function FlagleGame({ onBack }) {
           <p>
             Era <strong>{target.name}</strong>. La bandera completa ya está revelada.
           </p>
-          <button className="btn btn-primary" onClick={restart}>
-            Jugar de nuevo
+          <button className="btn btn-primary" onClick={startNewRound}>
+            {mode === GAME_MODES.DAILY ? "Reintentar bandera" : "Nueva bandera"}
           </button>
         </div>
       )}

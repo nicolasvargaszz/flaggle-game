@@ -133,6 +133,94 @@ html, body, #root {
   font-size: 1rem;
 }
 
+.mode-select-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  position: relative;
+}
+
+.mode-back-btn {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.mode-select-header {
+  text-align: center;
+}
+
+.mode-select-emoji {
+  display: block;
+  font-size: 3.25rem;
+  line-height: 1;
+  margin-bottom: .65rem;
+}
+
+.mode-select-title {
+  font-size: 2.35rem;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.mode-select-subtitle {
+  color: var(--text-muted);
+  margin-top: .35rem;
+}
+
+.mode-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 1rem;
+  width: min(100%, 620px);
+}
+
+.mode-choice-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  cursor: pointer;
+  min-height: 170px;
+  padding: 1.35rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  transition: transform .16s, border-color .16s, box-shadow .16s;
+}
+
+.mode-choice-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 28px rgba(43,179,163,.22);
+}
+
+.mode-choice-card.daily:hover {
+  border-color: var(--accent-2);
+  box-shadow: 0 10px 28px rgba(240,106,79,.2);
+}
+
+.mode-choice-card strong {
+  font-size: 1.25rem;
+}
+
+.mode-choice-card p {
+  color: var(--text-muted);
+  font-size: .92rem;
+}
+
+.mode-choice-kicker {
+  color: var(--accent);
+  font-size: .78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════════
    GAME LAYOUT
    ══════════════════════════════════════════════════════════════════════════════ */
@@ -421,7 +509,7 @@ html, body, #root {
   z-index: 5;
 }
 
-.globle-mode-tabs {
+.mode-tabs {
   display: inline-flex;
   align-items: center;
   gap: .25rem;
@@ -429,6 +517,7 @@ html, body, #root {
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: .25rem;
+  align-self: center;
 }
 
 .mode-tab {
@@ -567,6 +656,11 @@ html, body, #root {
    ══════════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 500px) {
   .home-title { font-size: 2.2rem; }
+  .mode-choice-grid { grid-template-columns: 1fr; }
+  .mode-select-title { font-size: 2rem; }
+  .mode-back-btn { position: static; align-self: flex-start; }
+  .mode-tabs { width: 100%; justify-content: center; }
+  .mode-tab { flex: 1; min-width: 0; }
   .globe-map { min-height: 420px; }
   .win-banner  { flex-direction: column; align-items: flex-start; }
   .lose-banner { flex-direction: column; align-items: flex-start; }

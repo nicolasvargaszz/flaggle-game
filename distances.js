@@ -32,7 +32,7 @@ export function haversineDistance(a, b) {
  * Thresholds can be tuned freely.
  */
 export function getProximityHint(distanceKm) {
-  if (distanceKm === 0)    return { label: "¡Es ese! 🎯",   cls: "exact"    };
+  if (distanceKm === 0)    return { label: "¡Ganaste! 🎯",   cls: "exact"    };
   if (distanceKm < 1000)   return { label: "Muy cerca 🔥",  cls: "very-hot" };
   if (distanceKm < 3000)   return { label: "Cerca 🟠",      cls: "hot"      };
   if (distanceKm < 6000)   return { label: "Lejos 🟡",      cls: "warm"     };

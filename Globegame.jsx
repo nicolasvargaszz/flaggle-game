@@ -10,35 +10,12 @@ import countries from "./countries.js";
 import { haversineDistance, getProximityHint } from "./distances.js";
 import CountryInput from "./countryinput.jsx";
 import GameLayout from "./gamelayout.jsx";
+import { GAME_MODES, getDailyCountry, getDailyKey } from "./gameModes.js";
 
-const GAME_MODES = {
-  PRACTICE: "practice",
-  DAILY: "daily",
-};
 const globeTargetCountries = countries.filter(country => country.mapPolygon);
 
 function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function getDailyKey(date = new Date()) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function hashString(value) {
-  let hash = 2166136261;
-  for (let i = 0; i < value.length; i++) {
-    hash ^= value.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function getDailyCountry(dateKey) {
-  return globeTargetCountries[hashString(dateKey) % globeTargetCountries.length];
 }
 
 function isAdjacent(country, target) {
@@ -64,8 +41,8 @@ function buildGuess(country, target) {
   return { country, distanceKm, hint, won, adjacent };
 }
 
-export default function GlobleGame({ onBack }) {
-  const [mode, setMode] = useState(GAME_MODES.PRACTICE);
+export default function GlobleGame({ initialMode = GAME_MODES.PRACTICE, onBack }) {
+  const [mode, setMode] = useState(initialMode);
   const [dailyKey, setDailyKey] = useState(() => getDailyKey());
   const [practiceTarget, setPracticeTarget] = useState(() => pickRandom(globeTargetCountries));
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -74,7 +51,10 @@ export default function GlobleGame({ onBack }) {
   const [alreadyGuessed, setAlreadyGuessed] = useState(null);
   const [showCountryLabels, setShowCountryLabels] = useState(true);
 
-  const dailyTarget = useMemo(() => getDailyCountry(dailyKey), [dailyKey]);
+  const dailyTarget = useMemo(
+    () => getDailyCountry(globeTargetCountries, dailyKey, "globle"),
+    [dailyKey]
+  );
   const target = mode === GAME_MODES.DAILY ? dailyTarget : practiceTarget;
   const guessedCodes = useMemo(
     () => new Set(guesses.map(guess => guess.country.code3)),
@@ -142,7 +122,7 @@ export default function GlobleGame({ onBack }) {
   return (
     <GameLayout title="GLOBLE" emoji="🌍" onBack={onBack}>
       <section className="globle-play">
-        <div className="globle-mode-tabs" role="tablist" aria-label="Modo de juego">
+        <div className="mode-tabs" role="tablist" aria-label="Modo de juego">
           <button
             type="button"
             className={`mode-tab ${mode === GAME_MODES.PRACTICE ? "active" : ""}`}
