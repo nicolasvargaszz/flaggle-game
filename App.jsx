@@ -4,7 +4,13 @@ import "./style.css";
 
 const FlagleGame = lazy(() => import("./Flaglegame.jsx"));
 const GlobleGame = lazy(() => import("./Globegame.jsx"));
-const SCREENS = { HOME: "home", FLAGLE: "flagle", GLOBLE: "globle" };
+const FlagChoiceGame = lazy(() => import("./src/games/flag-choice/FlagChoiceGame.jsx"));
+const SCREENS = {
+  HOME: "home",
+  FLAGLE: "flagle",
+  GLOBLE: "globle",
+  FLAG_CHOICE: "flag-choice",
+};
 const GAME_LABELS = {
   [SCREENS.FLAGLE]: {
     title: "Flagle",
@@ -28,6 +34,10 @@ export default function App() {
   const [gameMode, setGameMode] = useState(GAME_MODES.PRACTICE);
 
   function openModeSelect(game) {
+    if (game === SCREENS.FLAG_CHOICE) {
+      setScreen(game);
+      return;
+    }
     setPendingGame(game);
   }
 
@@ -53,6 +63,13 @@ export default function App() {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <GlobleGame initialMode={gameMode} onBack={goHome} />
+      </Suspense>
+    );
+  }
+  if (screen === SCREENS.FLAG_CHOICE) {
+    return (
+      <Suspense fallback={<LoadingScreen />}>
+        <FlagChoiceGame onBack={goHome} />
       </Suspense>
     );
   }
@@ -100,6 +117,14 @@ function HomeScreen({ onSelect }) {
           <h2 className="game-card-title">Globle</h2>
           <p className="game-card-desc">
             Adivina el país misterioso. Te decimos qué tan cerca o lejos estás en km.
+          </p>
+          <span className="game-card-cta">Jugar →</span>
+        </button>
+        <button className="game-card" onClick={() => onSelect(SCREENS.FLAG_CHOICE)}>
+          <span className="game-card-emoji">🎌</span>
+          <h2 className="game-card-title">Flag Choice</h2>
+          <p className="game-card-desc">
+            Mira una bandera y elegí el país correcto entre cuatro opciones.
           </p>
           <span className="game-card-cta">Jugar →</span>
         </button>
