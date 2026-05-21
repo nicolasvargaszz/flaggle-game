@@ -62,6 +62,7 @@ export const LEVELS = [
 const DEFAULT_OPTION_COUNT = 4;
 
 function getCountryId(country) {
+  if (typeof country === "string") return country;
   return country?.code3 ?? country?.code2 ?? country?.name;
 }
 
@@ -104,16 +105,13 @@ export function shuffleArray(items) {
   return shuffled;
 }
 
-export function shuffle(items) {
-  return shuffleArray(items);
-}
-
 export function pickRandom(items) {
+  if (items.length === 0) return null;
   return items[Math.floor(Math.random() * items.length)];
 }
 
 function getPlayableCountries(countries) {
-  return countries.filter(country => country.flagPng && country.code3);
+  return countries.filter(country => (country?.flagPng || country?.flagSvg) && country?.code3);
 }
 
 function normalizeLevel(level) {
@@ -254,6 +252,8 @@ export function generateMultipleChoiceOptions({
   currentLevel,
   previousGuesses = [],
 }) {
+  if (!targetCountry) return [];
+
   const previousGuessKeys = getPreviousGuessKeys(previousGuesses);
   const decoyLimit = DEFAULT_OPTION_COUNT - 1;
   const decoyCandidates = getDecoyCountries(targetCountry, countries, currentLevel);
@@ -294,26 +294,18 @@ export function generateMultipleChoiceOptions({
 }
 
 export function getRandomCountryForLevel(countries, level, alreadyUsedCountries = []) {
-  const usedCodes = new Set(alreadyUsedCountries);
+  const usedCodes = getPreviousGuessKeys(alreadyUsedCountries);
+  const lastUsedKey = getCountryIdKey(alreadyUsedCountries[alreadyUsedCountries.length - 1]);
   const levelCountries = getCountriesByLevel(countries, level);
-  const freshCountries = levelCountries.filter(country => !usedCodes.has(country.code3));
-  const pool = freshCountries.length > 0 ? freshCountries : levelCountries;
+  const freshCountries = levelCountries.filter(country => !usedCodes.has(getCountryIdKey(country)));
+  const restartPool = levelCountries.filter(country => getCountryIdKey(country) !== lastUsedKey);
+  const pool = freshCountries.length > 0
+    ? freshCountries
+    : restartPool.length > 0
+      ? restartPool
+      : levelCountries;
 
   return pickRandom(pool);
-}
-
-export function getLevelFromScore(score) {
-  let scoreFloor = 0;
-
-  for (const level of LEVELS) {
-    const nextFloor = scoreFloor + level.questionsToAdvance;
-    if (score < nextFloor || level === LEVELS[LEVELS.length - 1]) {
-      return level;
-    }
-    scoreFloor = nextFloor;
-  }
-
-  return LEVELS[LEVELS.length - 1];
 }
 
 export function getLevelIndex(level) {

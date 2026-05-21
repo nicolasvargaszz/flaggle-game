@@ -45,6 +45,7 @@ export default function FlagChoiceGame({ onBack }) {
   const [feedback, setFeedback] = useState(null);
   const [levelUpInfo, setLevelUpInfo] = useState(null);
   const timersRef = useRef([]);
+  const answerLockedRef = useRef(false);
 
   const progress = useMemo(
     () => getLevelProgress(game.currentLevel, game.correctAnswersInCurrentLevel),
@@ -66,6 +67,7 @@ export default function FlagChoiceGame({ onBack }) {
   }
 
   function resetQuestionState() {
+    answerLockedRef.current = false;
     setSelectedCode(null);
     setFeedback(null);
     setLevelUpInfo(null);
@@ -87,6 +89,7 @@ export default function FlagChoiceGame({ onBack }) {
 
   function restart() {
     clearQueuedTimers();
+    answerLockedRef.current = false;
     const nextGame = createInitialGameState();
     setRound(createFlagChoiceRound(countries, nextGame.currentLevel, [], OPTION_COUNT));
     setGame(nextGame);
@@ -146,7 +149,7 @@ export default function FlagChoiceGame({ onBack }) {
   }
 
   function handleWrongAnswer(nextUsedCountries) {
-    const nextLives = game.lives - 1;
+    const nextLives = Math.max(0, game.lives - 1);
     const feedbackGame = {
       ...game,
       lives: nextLives,
@@ -173,11 +176,12 @@ export default function FlagChoiceGame({ onBack }) {
   }
 
   function handleChoice(country) {
-    if (game.gameStatus !== "playing") return;
+    if (answerLockedRef.current || game.gameStatus !== "playing" || !round?.target) return;
 
     const isCorrect = country.code3 === round.target.code3;
     const nextUsedCountries = [...game.usedCountries, round.target.code3];
 
+    answerLockedRef.current = true;
     setSelectedCode(country.code3);
 
     if (isCorrect) {
@@ -197,7 +201,16 @@ export default function FlagChoiceGame({ onBack }) {
 
   return (
     <GameLayout title="Flag Choice" emoji="🎌" onBack={onBack} className="flag-choice-layout">
-      {game.gameStatus === "gameOver" ? (
+      {!round?.target ? (
+        <section className="flag-choice-end">
+          <div className="flag-choice-end-icon">🎌</div>
+          <h3>No hay países disponibles</h3>
+          <p>Revisá que el dataset tenga países con bandera y código ISO.</p>
+          <button className="btn btn-ghost" onClick={onBack}>
+            Back to Menu
+          </button>
+        </section>
+      ) : game.gameStatus === "gameOver" ? (
         <section className="flag-choice-end">
           <div className="flag-choice-end-icon">🌍</div>
           <h3>Game Over</h3>

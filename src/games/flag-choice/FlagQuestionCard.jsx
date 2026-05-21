@@ -5,9 +5,14 @@ export default function FlagQuestionCard({ targetCountry, feedback }) {
     <section className={`flag-question-card ${feedbackText}`}>
       <div className="flag-choice-flag-frame">
         <img
-          src={targetCountry.flagPng}
+          src={targetCountry.flagPng ?? targetCountry.flagSvg}
           alt="Bandera para adivinar"
           className="flag-choice-flag"
+          onError={(event) => {
+            if (targetCountry.flagSvg && event.currentTarget.src !== targetCountry.flagSvg) {
+              event.currentTarget.src = targetCountry.flagSvg;
+            }
+          }}
         />
       </div>
 
