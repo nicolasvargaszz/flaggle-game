@@ -1,15 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import countries from "../../data/countries.js";
 import GameLayout from "../../../gamelayout.jsx";
+import AnswerOptions from "./AnswerOptions.jsx";
+import FlagChoiceHeader from "./FlagChoiceHeader.jsx";
+import FlagQuestionCard from "./FlagQuestionCard.jsx";
+import LevelProgress from "./LevelProgress.jsx";
 import {
   LEVELS,
   createFlagChoiceRound,
   getLevelFromScore,
   getLevelProgress,
 } from "./flagChoiceUtils.js";
+import "./flagChoice.css";
 
 const OPTION_COUNT = 4;
-const FEEDBACK_DELAY = 950;
+const FEEDBACK_DELAY = 700;
 
 export default function FlagChoiceGame({ onBack }) {
   const initialLevel = LEVELS[0];
@@ -103,8 +108,14 @@ export default function FlagChoiceGame({ onBack }) {
     return "muted";
   }
 
+  const gameState = gameOver
+    ? "gameOver"
+    : levelUpName
+      ? "levelUp"
+      : feedback ?? "idle";
+
   return (
-    <GameLayout title="Flag Choice" emoji="🎌" onBack={onBack}>
+    <GameLayout title="Flag Choice" emoji="🎌" onBack={onBack} className="flag-choice-layout">
       {gameOver ? (
         <section className="flag-choice-end">
           <div className="flag-choice-end-icon">🌍</div>
@@ -120,72 +131,20 @@ export default function FlagChoiceGame({ onBack }) {
           </button>
         </section>
       ) : (
-        <section className="flag-choice-shell">
-          <div className="flag-choice-stats">
-            <span className="stat-pill">Puntos {score}</span>
-            <span className="stat-pill">Nivel {currentLevel.difficulty}: {currentLevel.name}</span>
-            <span className="flag-choice-lives" aria-label={`${lives} vidas`}>
-              {Array.from({ length: currentLevel.lives }, (_, index) => (
-                <span key={index} className={index < lives ? "" : "empty"}>
-                  🌍
-                </span>
-              ))}
-            </span>
-          </div>
-
-          <div className="flag-choice-level-card">
-            <div>
-              <strong>{currentLevel.name}</strong>
-              <p>{currentLevel.description}</p>
-            </div>
-            <div className="flag-choice-progress">
-              <span>
-                {progress.isMaxLevel
-                  ? "Nivel máximo"
-                  : `${progress.current}/${progress.required} para avanzar`}
-              </span>
-              <div className="flag-choice-progress-track">
-                <div
-                  className="flag-choice-progress-fill"
-                  style={{ width: `${progress.percent}%` }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flag-choice-card">
-            <div className="flag-choice-flag-frame">
-              <img
-                src={round.target.flagPng}
-                alt="Bandera para adivinar"
-                className="flag-choice-flag"
-              />
-            </div>
-
-            <div className={`flag-choice-feedback ${feedback ?? ""}`} aria-live="polite">
-              {feedback === "correct" && (
-                <>
-                  Correcto: <strong>{round.target.name}</strong>
-                  {levelUpName && <> · Subiste a <strong>{levelUpName}</strong></>}
-                </>
-              )}
-              {feedback === "wrong" && <>Incorrecto. Era <strong>{round.target.name}</strong></>}
-              {!feedback && "Elegí el país correcto"}
-            </div>
-
-            <div className="flag-choice-options">
-              {round.options.map(country => (
-                <button
-                  key={country.code3}
-                  className={`flag-choice-option ${getOptionClass(country)}`}
-                  disabled={Boolean(selectedCode)}
-                  onClick={() => handleChoice(country)}
-                >
-                  {country.name}
-                </button>
-              ))}
-            </div>
-          </div>
+        <section className={`flag-choice-shell ${gameState}`}>
+          <FlagChoiceHeader currentLevel={currentLevel} lives={lives} score={score} />
+          <LevelProgress currentLevel={currentLevel} progress={progress} />
+          <FlagQuestionCard
+            targetCountry={round.target}
+            feedback={feedback}
+            levelUpName={levelUpName}
+          />
+          <AnswerOptions
+            options={round.options}
+            selectedCode={selectedCode}
+            getOptionClass={getOptionClass}
+            onChoice={handleChoice}
+          />
         </section>
       )}
     </GameLayout>
