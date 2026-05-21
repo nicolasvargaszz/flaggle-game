@@ -1,4 +1,4 @@
 import countries from "../../countries.js";
-import { withDifficulty } from "./countryDifficulty.js";
+import { enrichCountriesWithDifficulty } from "./countryDifficulty.js";
 
-export default countries.map(withDifficulty);
+export default enrichCountriesWithDifficulty(countries);
