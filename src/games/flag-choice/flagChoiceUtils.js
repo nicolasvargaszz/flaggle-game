@@ -59,8 +59,53 @@ export const LEVELS = [
   },
 ];
 
+const DEFAULT_OPTION_COUNT = 4;
+
+function getCountryId(country) {
+  return country?.code3 ?? country?.code2 ?? country?.name;
+}
+
+function getCountryIdKey(country) {
+  return String(getCountryId(country) ?? "").toLowerCase();
+}
+
+function getPreviousGuessKeys(previousGuesses = []) {
+  return new Set(
+    previousGuesses
+      .map(guess => typeof guess === "string" ? guess : getCountryId(guess))
+      .filter(Boolean)
+      .map(guess => String(guess).toLowerCase())
+  );
+}
+
+function isSameCountry(country, targetCountry) {
+  return getCountryIdKey(country) === getCountryIdKey(targetCountry);
+}
+
+function uniqueCountries(countries) {
+  const seen = new Set();
+
+  return countries.filter(country => {
+    const id = getCountryIdKey(country);
+    if (!id || seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+}
+
+export function shuffleArray(items) {
+  const shuffled = [...items];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+}
+
 export function shuffle(items) {
-  return [...items].sort(() => Math.random() - 0.5);
+  return shuffleArray(items);
 }
 
 export function pickRandom(items) {
@@ -91,6 +136,161 @@ export function getCountriesByLevel(countries, level) {
   return exactMatches.length > 0
     ? exactMatches
     : playableCountries.filter(country => country.difficulty <= currentLevel.difficulty);
+}
+
+function getDifficulty(country, currentLevel) {
+  const normalizedLevel = normalizeLevel(currentLevel);
+  return country?.difficulty ?? normalizedLevel.difficulty;
+}
+
+function getDifficultyGap(country, targetCountry, currentLevel) {
+  return Math.abs(getDifficulty(country, currentLevel) - getDifficulty(targetCountry, currentLevel));
+}
+
+function hasSameRegion(country, targetCountry) {
+  return Boolean(country.region && targetCountry.region && country.region === targetCountry.region);
+}
+
+function hasSameSubregion(country, targetCountry) {
+  return Boolean(
+    country.subregion
+      && targetCountry.subregion
+      && country.subregion === targetCountry.subregion
+  );
+}
+
+function getFlagColorScore(country, targetCountry) {
+  const countryColors = country.flagColors ?? country.flagColours ?? country.colors;
+  const targetColors = targetCountry.flagColors ?? targetCountry.flagColours ?? targetCountry.colors;
+
+  if (!Array.isArray(countryColors) || !Array.isArray(targetColors)) return 0;
+
+  const targetColorSet = new Set(targetColors.map(color => String(color).toLowerCase()));
+  return countryColors.filter(color => targetColorSet.has(String(color).toLowerCase())).length;
+}
+
+function scoreDecoyCountry(country, targetCountry, currentLevel, previousGuessKeys = new Set()) {
+  const difficultyGap = getDifficultyGap(country, targetCountry, currentLevel);
+  let score = 0;
+
+  if (hasSameSubregion(country, targetCountry)) score += 60;
+  if (hasSameRegion(country, targetCountry)) score += 30;
+  score += Math.max(0, 24 - difficultyGap * 8);
+  score += getFlagColorScore(country, targetCountry) * 10;
+
+  if (previousGuessKeys.has(getCountryIdKey(country))) score -= 8;
+
+  return score;
+}
+
+function sortDecoys(countries, targetCountry, currentLevel, previousGuessKeys = new Set()) {
+  return shuffleArray(countries).sort(
+    (first, second) =>
+      scoreDecoyCountry(second, targetCountry, currentLevel, previousGuessKeys)
+        - scoreDecoyCountry(first, targetCountry, currentLevel, previousGuessKeys)
+  );
+}
+
+function addUniqueOptions(options, candidates, targetCountry, limit) {
+  const selectedIds = new Set(options.map(getCountryIdKey));
+
+  for (const candidate of candidates) {
+    const candidateId = getCountryIdKey(candidate);
+    if (!candidateId || selectedIds.has(candidateId) || isSameCountry(candidate, targetCountry)) {
+      continue;
+    }
+
+    options.push(candidate);
+    selectedIds.add(candidateId);
+
+    if (options.length >= limit) break;
+  }
+
+  return options;
+}
+
+export function getNearbyDifficultyCountries(countries, targetCountry, currentLevel) {
+  return getPlayableCountries(countries).filter(
+    country => !isSameCountry(country, targetCountry)
+      && getDifficultyGap(country, targetCountry, currentLevel) <= 1
+  );
+}
+
+export function getSameRegionCountries(countries, targetCountry) {
+  return getPlayableCountries(countries).filter(
+    country => !isSameCountry(country, targetCountry)
+      && (hasSameSubregion(country, targetCountry) || hasSameRegion(country, targetCountry))
+  );
+}
+
+export function getDecoyCountries(targetCountry, countries, currentLevel) {
+  const playableCountries = getPlayableCountries(countries);
+  const sameSubregionNearby = playableCountries.filter(
+    country => !isSameCountry(country, targetCountry)
+      && hasSameSubregion(country, targetCountry)
+      && getDifficultyGap(country, targetCountry, currentLevel) <= 1
+  );
+  const sameRegionNearby = playableCountries.filter(
+    country => !isSameCountry(country, targetCountry)
+      && hasSameRegion(country, targetCountry)
+      && getDifficultyGap(country, targetCountry, currentLevel) <= 1
+  );
+  const sameRegion = getSameRegionCountries(countries, targetCountry);
+  const nearbyDifficulty = getNearbyDifficultyCountries(countries, targetCountry, currentLevel);
+  const globalFallback = playableCountries.filter(country => !isSameCountry(country, targetCountry));
+
+  return uniqueCountries([
+    ...sortDecoys(sameSubregionNearby, targetCountry, currentLevel),
+    ...sortDecoys(sameRegionNearby, targetCountry, currentLevel),
+    ...sortDecoys(sameRegion, targetCountry, currentLevel),
+    ...sortDecoys(nearbyDifficulty, targetCountry, currentLevel),
+    ...sortDecoys(globalFallback, targetCountry, currentLevel),
+  ]);
+}
+
+export function generateMultipleChoiceOptions({
+  targetCountry,
+  countries,
+  currentLevel,
+  previousGuesses = [],
+}) {
+  const previousGuessKeys = getPreviousGuessKeys(previousGuesses);
+  const decoyLimit = DEFAULT_OPTION_COUNT - 1;
+  const decoyCandidates = getDecoyCountries(targetCountry, countries, currentLevel);
+  const freshDecoys = decoyCandidates.filter(
+    country => !previousGuessKeys.has(getCountryIdKey(country))
+  );
+  const fallbackDecoys = getPlayableCountries(countries).filter(
+    country => !isSameCountry(country, targetCountry)
+  );
+  const selectedDecoys = [];
+
+  addUniqueOptions(
+    selectedDecoys,
+    freshDecoys,
+    targetCountry,
+    decoyLimit
+  );
+
+  if (selectedDecoys.length < decoyLimit) {
+    addUniqueOptions(
+      selectedDecoys,
+      decoyCandidates,
+      targetCountry,
+      decoyLimit
+    );
+  }
+
+  if (selectedDecoys.length < decoyLimit) {
+    addUniqueOptions(
+      selectedDecoys,
+      shuffleArray(fallbackDecoys),
+      targetCountry,
+      decoyLimit
+    );
+  }
+
+  return shuffleArray([targetCountry, ...selectedDecoys.slice(0, decoyLimit)]);
 }
 
 export function getRandomCountryForLevel(countries, level, alreadyUsedCountries = []) {
@@ -136,22 +336,15 @@ export function getLevelProgress(score) {
 }
 
 export function createFlagChoiceRound(countries, level, alreadyUsedCountries = [], optionCount = 4) {
-  const playableCountries = getPlayableCountries(countries);
   const target = getRandomCountryForLevel(countries, level, alreadyUsedCountries);
-  const sameLevelDistractors = getCountriesByLevel(countries, level)
-    .filter(country => country.code3 !== target.code3);
-  const easierDistractors = playableCountries
-    .filter(country => country.code3 !== target.code3 && country.difficulty <= target.difficulty);
-  const anyDistractors = playableCountries.filter(country => country.code3 !== target.code3);
-  const distractorPool = sameLevelDistractors.length >= optionCount - 1
-    ? sameLevelDistractors
-    : easierDistractors.length >= optionCount - 1
-      ? easierDistractors
-      : anyDistractors;
-  const distractors = shuffle(distractorPool).slice(0, optionCount - 1);
 
   return {
     target,
-    options: shuffle([target, ...distractors]),
+    options: generateMultipleChoiceOptions({
+      targetCountry: target,
+      countries,
+      currentLevel: level,
+      previousGuesses: alreadyUsedCountries,
+    }).slice(0, optionCount),
   };
 }
