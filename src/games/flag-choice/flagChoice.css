@@ -39,6 +39,76 @@
   gap: .8rem;
 }
 
+.flag-choice-start {
+  width: min(100%, 420px);
+  min-height: calc(100vh - 110px);
+  margin: 0 auto;
+  padding: 1.2rem;
+  display: grid;
+  align-content: center;
+  gap: .95rem;
+  border: 1.5px solid rgba(255,255,255,.12);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(43,179,163,.16), rgba(24,26,31,.98)),
+    var(--bg-card);
+  box-shadow: 0 18px 42px rgba(0,0,0,.34);
+}
+
+.flag-choice-start-kicker {
+  color: var(--accent);
+  font-size: .78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.flag-choice-start h2 {
+  font-size: 2.35rem;
+  line-height: 1;
+}
+
+.flag-choice-start p {
+  color: var(--text-muted);
+  font-size: .98rem;
+  line-height: 1.4;
+}
+
+.flag-choice-start-levels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+}
+
+.flag-choice-start-levels span {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius);
+  background: rgba(32,36,42,.86);
+  color: var(--text-muted);
+  font-size: .85rem;
+  font-weight: 900;
+  padding: .55rem;
+}
+
+.flag-choice-start-levels strong {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #071411;
+  flex: 0 0 auto;
+}
+
+.flag-choice-start-btn {
+  min-height: 54px;
+  margin-top: .25rem;
+}
+
 .flag-choice-mobile-header {
   display: grid;
   grid-template-columns: minmax(72px, 1fr) auto minmax(72px, 1fr);
@@ -231,6 +301,7 @@
   border-radius: 6px;
   background: #fff;
   box-shadow: 0 16px 34px rgba(0,0,0,.42);
+  animation: flagChoiceFadeIn .22s ease-out;
 }
 
 .flag-choice-feedback {
@@ -287,7 +358,12 @@
   padding: .75rem .9rem;
   text-align: left;
   transition: background .15s, border-color .15s, color .15s, transform .1s, opacity .15s;
+  animation: flagChoiceOptionIn .2s ease-out both;
 }
+
+.flag-choice-option:nth-child(2) { animation-delay: .04s; }
+.flag-choice-option:nth-child(3) { animation-delay: .08s; }
+.flag-choice-option:nth-child(4) { animation-delay: .12s; }
 
 .flag-choice-option:hover:not(:disabled) {
   border-color: var(--accent);
@@ -362,8 +438,8 @@
 }
 
 .flag-choice-level-up h3 {
-  font-size: 2.2rem;
-  line-height: 1;
+  font-size: 1.95rem;
+  line-height: 1.08;
 }
 
 .flag-choice-level-up p {
@@ -377,6 +453,11 @@
   border-radius: var(--radius);
   padding: .38rem .6rem;
   font-size: .86rem;
+}
+
+.flag-choice-level-up .btn {
+  min-width: 150px;
+  margin-top: .35rem;
 }
 
 .flag-choice-end {
@@ -446,6 +527,16 @@
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+@keyframes flagChoiceFadeIn {
+  from { opacity: 0; transform: translateY(6px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes flagChoiceOptionIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @media (min-width: 430px) {
   .flag-choice-layout {
     padding-top: 1rem;
@@ -481,6 +572,10 @@
   .flag-choice-option {
     font-size: .93rem;
     padding-inline: .75rem;
+  }
+
+  .flag-choice-start-levels {
+    grid-template-columns: 1fr;
   }
 
   .flag-choice-results,
