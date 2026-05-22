@@ -18,7 +18,7 @@ import "./flagChoice.css";
 const OPTION_COUNT = 4;
 const CORRECT_FEEDBACK_DELAY = 700;
 const WRONG_FEEDBACK_DELAY = 1000;
-const LEVEL_UP_DELAY = 950;
+const LEVEL_UP_DELAY = 1000;
 const BASE_CORRECT_POINTS = 10;
 
 function createInitialGameState() {
@@ -33,12 +33,14 @@ function createInitialGameState() {
     correctAnswersInCurrentLevel: 0,
     totalQuestionsAnswered: 0,
     usedCountries: [],
+    failedCountry: null,
     gameStatus: "playing",
   };
 }
 
 export default function FlagChoiceGame({ onBack }) {
   const initialLevel = LEVELS[0];
+  const [hasStarted, setHasStarted] = useState(false);
   const [game, setGame] = useState(() => createInitialGameState());
   const [round, setRound] = useState(() => createFlagChoiceRound(countries, initialLevel, [], OPTION_COUNT));
   const [selectedCode, setSelectedCode] = useState(null);
@@ -93,7 +95,12 @@ export default function FlagChoiceGame({ onBack }) {
     const nextGame = createInitialGameState();
     setRound(createFlagChoiceRound(countries, nextGame.currentLevel, [], OPTION_COUNT));
     setGame(nextGame);
+    setHasStarted(true);
     resetQuestionState();
+  }
+
+  function startGame() {
+    restart();
   }
 
   function handleCorrectAnswer(nextUsedCountries) {
@@ -143,9 +150,16 @@ export default function FlagChoiceGame({ onBack }) {
       setLevelUpInfo({
         currentLevel: nextLevel,
         recoveredLife: recoveredLives > feedbackGame.lives,
+        nextGame: levelUpGame,
       });
       queue(() => startNextRound(levelUpGame), LEVEL_UP_DELAY);
     }, CORRECT_FEEDBACK_DELAY);
+  }
+
+  function continueFromLevelUp() {
+    if (game.gameStatus !== "levelUp" || !levelUpInfo?.nextGame) return;
+    clearQueuedTimers();
+    startNextRound(levelUpInfo.nextGame);
   }
 
   function handleWrongAnswer(nextUsedCountries) {
@@ -156,6 +170,7 @@ export default function FlagChoiceGame({ onBack }) {
       streak: 0,
       totalQuestionsAnswered: game.totalQuestionsAnswered + 1,
       usedCountries: nextUsedCountries,
+      failedCountry: nextLives <= 0 ? round.target : game.failedCountry,
       gameStatus: "feedback",
     };
 
@@ -210,6 +225,27 @@ export default function FlagChoiceGame({ onBack }) {
             Back to Menu
           </button>
         </section>
+      ) : !hasStarted ? (
+        <section className="flag-choice-start">
+          <span className="flag-choice-start-kicker">Quiz de banderas</span>
+          <h2>Flag Choice</h2>
+          <p>
+            Mirá la bandera, elegí el país correcto y subí de nivel con cada racha.
+          </p>
+
+          <div className="flag-choice-start-levels" aria-label="Niveles disponibles">
+            {LEVELS.map(level => (
+              <span key={level.id}>
+                <strong>{level.difficulty}</strong>
+                {level.name}
+              </span>
+            ))}
+          </div>
+
+          <button className="btn btn-primary flag-choice-start-btn" onClick={startGame}>
+            Start
+          </button>
+        </section>
       ) : game.gameStatus === "gameOver" ? (
         <section className="flag-choice-end">
           <div className="flag-choice-end-icon">🌍</div>
@@ -231,6 +267,10 @@ export default function FlagChoiceGame({ onBack }) {
             <span>
               Mejor racha
               <strong>{game.bestStreak}</strong>
+            </span>
+            <span>
+              País fallado
+              <strong>{game.failedCountry?.name ?? "Ninguno"}</strong>
             </span>
           </div>
 
@@ -256,13 +296,16 @@ export default function FlagChoiceGame({ onBack }) {
           {game.gameStatus === "levelUp" ? (
             <section className="flag-choice-level-up" aria-live="polite">
               <span>{levelUpInfo?.currentLevel.id === "dios" ? "Modo Dios" : "Level Up"}</span>
-              <h3>{levelUpInfo?.currentLevel.name}</h3>
+              <h3>Subiste a {levelUpInfo?.currentLevel.name}</h3>
               <p>
                 {levelUpInfo?.currentLevel.id === "dios"
                   ? "Ahora solo aparecen países de dificultad Dios. Seguís jugando hasta perder."
-                  : `Avanzaste al nivel ${levelUpInfo?.currentLevel.difficulty}.`}
+                  : `Nueva dificultad: ${levelUpInfo?.currentLevel.difficulty}.`}
               </p>
               {levelUpInfo?.recoveredLife && <strong>Recuperaste 1 vida</strong>}
+              <button className="btn btn-primary" onClick={continueFromLevelUp}>
+                Continuar
+              </button>
             </section>
           ) : (
             <>

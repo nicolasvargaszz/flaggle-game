@@ -5,6 +5,7 @@ export default function FlagQuestionCard({ targetCountry, feedback }) {
     <section className={`flag-question-card ${feedbackText}`}>
       <div className="flag-choice-flag-frame">
         <img
+          key={targetCountry.code3}
           src={targetCountry.flagPng ?? targetCountry.flagSvg}
           alt="Bandera para adivinar"
           className="flag-choice-flag"
@@ -19,14 +20,17 @@ export default function FlagQuestionCard({ targetCountry, feedback }) {
       <div className={`flag-choice-feedback ${feedbackText}`} aria-live="polite">
         {feedback?.type === "correct" && (
           <>
-            Correcto: <strong>{targetCountry.name}</strong>
-            <span>
-              +{feedback.points} puntos
-              {feedback.bonus > 0 && <> · bonus racha +{feedback.bonus}</>}
-            </span>
+            <strong>Correcto</strong>
+            <span>{targetCountry.name} · +{feedback.points} puntos</span>
+            {feedback.bonus > 0 && <span>Bonus racha +{feedback.bonus}</span>}
           </>
         )}
-        {feedback?.type === "wrong" && <>Era <strong>{targetCountry.name}</strong></>}
+        {feedback?.type === "wrong" && (
+          <>
+            <strong>Incorrecto</strong>
+            <span>La respuesta era: {targetCountry.name}</span>
+          </>
+        )}
         {!feedback && "¿Qué país tiene esta bandera?"}
       </div>
     </section>
